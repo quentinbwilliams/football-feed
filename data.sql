@@ -1,0 +1,83 @@
+/c footy_db
+
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS countries CASCADE;
+DROP TABLE IF EXISTS leagues CASCADE;
+DROP TABLE IF EXISTS teams CASCADE;
+DROP TABLE IF EXISTS players CASCADE;
+DROP TABLE IF EXISTS countries_leagues CASCADE;
+DROP TABLE IF EXISTS leagues_teams CASCADE;
+DROP TABLE IF EXISTS teams_players CASCADE;
+DROP TABLE IF EXISTS users_leagues CASCADE;
+DROP TABLE IF EXISTS users_teams CASCADE;
+
+CREATE TABLE users
+(
+	id SERIAL PRIMARY KEY,
+  username TEXT NOT NULL,
+  password TEXT NOT NULL,
+);
+
+CREATE TABLE countries
+(
+	id SERIAL PRIMARY KEY,
+	name TEXT NOT NULL,
+	api_id INTEGER
+);
+
+CREATE TABLE leagues
+(
+	id SERIAL PRIMARY KEY,
+	name TEXT NOT NULL,
+	api_id INTEGER
+);
+
+CREATE TABLE teams
+(
+	id SERIAL PRIMARY KEY,
+	name TEXT NOT NULL,
+	api_id INTEGER
+);
+
+CREATE TABLE players
+(
+	id SERIAL PRIMARY KEY,
+	name TEXT NOT NULL,
+	nationality TEXT,
+	api_id INTEGER
+);
+
+CREATE TABLE countries_leagues
+(
+	country_id INTEGER NOT NULL REFERENCES countries ON DELETE CASCADE,
+	league_id INTEGER NOT NULL REFERENCES leagues ON DELETE CASCADE,
+	PRIMARY KEY(country_id, league_id)
+);
+
+CREATE TABLE leagues_teams 
+(
+	league_id INTEGER NOT NULL REFERENCES leagues ON DELETE CASCADE,
+	team_id INTEGER NOT NULL REFERENCES teams ON DELETE CASCADE,
+	PRIMARY KEY(league_id, team_id)
+);
+
+CREATE TABLE teams_players
+(
+	team_id INTEGER NOT NULL REFERENCES teams ON DELETE CASCADE,
+	player_id INTEGER NOT NULL REFERENCES players ON DELETE CASCADE,
+	PRIMARY KEY(team_id, player_id)
+);
+
+CREATE TABLE users_teams
+(
+	user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+	team_id INTEGER NOT NULL REFERENCES teams ON DELETE CASCADE,
+	PRIMARY KEY(user_id, team_id)
+);
+
+CREATE TABLE users_leagues
+(
+	user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
+	leagues_id INTEGER NOT NULL REFERENCES leagues ON DELETE CASCADE,
+	PRIMARY KEY(user_id, league_id)
+);

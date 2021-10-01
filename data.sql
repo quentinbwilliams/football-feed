@@ -1,83 +1,105 @@
-/c footy_db
+/c footy_db;
+
+-- DROP TABLES
 
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS countries CASCADE;
 DROP TABLE IF EXISTS leagues CASCADE;
 DROP TABLE IF EXISTS teams CASCADE;
 DROP TABLE IF EXISTS players CASCADE;
+DROP TABLE IF EXISTS coaches CASCADE;
+DROP TABLE IF EXISTS users_leagues CASCADE;
+DROP TABLE IF EXISTS users_teams CASCADE;
 DROP TABLE IF EXISTS countries_leagues CASCADE;
 DROP TABLE IF EXISTS leagues_teams CASCADE;
 DROP TABLE IF EXISTS teams_players CASCADE;
-DROP TABLE IF EXISTS users_leagues CASCADE;
-DROP TABLE IF EXISTS users_teams CASCADE;
+DROP TABLE IF EXISTS teams_coaches CASCADE;
 
+-- CREATE TABLES
+ 
 CREATE TABLE users
 (
-	id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   username TEXT NOT NULL,
   password TEXT NOT NULL,
+  type TEXT NOT NULL
 );
 
 CREATE TABLE countries
 (
-	id SERIAL PRIMARY KEY,
-	name TEXT NOT NULL,
-	api_id INTEGER
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  code TEXT NOT NULL,
+  flag TEXT NOT NULL
 );
 
 CREATE TABLE leagues
 (
-	id SERIAL PRIMARY KEY,
-	name TEXT NOT NULL,
-	api_id INTEGER
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  api_football_id INTEGER NOT NULL
 );
 
 CREATE TABLE teams
 (
-	id SERIAL PRIMARY KEY,
-	name TEXT NOT NULL,
-	api_id INTEGER
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  api_football_id INTEGER
 );
 
 CREATE TABLE players
 (
-	id SERIAL PRIMARY KEY,
-	name TEXT NOT NULL,
-	nationality TEXT,
-	api_id INTEGER
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  nationality TEXT,
+  api_football_id INTEGER
+);
+
+CREATE TABLE coaches
+(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  nationality TEXT
+);
+
+-- JOIN TABLES
+
+CREATE TABLE users_leagues
+(id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
+  league_id INTEGER REFERENCES leagues (id) ON DELETE CASCADE
+);
+
+CREATE TABLE users_teams
+(id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
+  team_id INTEGER REFERENCES teams (id) ON DELETE CASCADE
 );
 
 CREATE TABLE countries_leagues
 (
-	country_id INTEGER NOT NULL REFERENCES countries ON DELETE CASCADE,
-	league_id INTEGER NOT NULL REFERENCES leagues ON DELETE CASCADE,
-	PRIMARY KEY(country_id, league_id)
+  id SERIAL PRIMARY KEY,
+  country_id INTEGER REFERENCES countries (id) ON DELETE CASCADE,
+  league_id INTEGER REFERENCES leagues (id) ON DELETE CASCADE
 );
 
-CREATE TABLE leagues_teams 
+CREATE TABLE leaugues_teams
 (
-	league_id INTEGER NOT NULL REFERENCES leagues ON DELETE CASCADE,
-	team_id INTEGER NOT NULL REFERENCES teams ON DELETE CASCADE,
-	PRIMARY KEY(league_id, team_id)
+  id SERIAL PRIMARY KEY,
+  league_id INTEGER REFERENCES leagues (id) ON DELETE CASCADE,
+  team_id INTEGER REFERENCES teams (id) ON DELETE CASCADE
 );
 
-CREATE TABLE teams_players
+CREATE TABlE teams_players
 (
-	team_id INTEGER NOT NULL REFERENCES teams ON DELETE CASCADE,
-	player_id INTEGER NOT NULL REFERENCES players ON DELETE CASCADE,
-	PRIMARY KEY(team_id, player_id)
+  id SERIAL PRIMARY KEY,
+  team_id INTEGER REFERENCES teams (id) ON DELETE CASCADE,
+  player_id INTEGER REFERENCES players (id) ON DELETE CASCADE
 );
 
-CREATE TABLE users_teams
+CREATE TABLE teams_coaches
 (
-	user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
-	team_id INTEGER NOT NULL REFERENCES teams ON DELETE CASCADE,
-	PRIMARY KEY(user_id, team_id)
-);
-
-CREATE TABLE users_leagues
-(
-	user_id INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
-	leagues_id INTEGER NOT NULL REFERENCES leagues ON DELETE CASCADE,
-	PRIMARY KEY(user_id, league_id)
+  id SERIAL PRIMARY KEY,
+  team_id INTEGER REFERENCES teams (id) ON DELETE CASCADE,
+  coach_id INTEGER REFERENCES coaches (id) ON DELETE CASCADE
 );

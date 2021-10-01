@@ -37,7 +37,11 @@ CREATE TABLE leagues
 (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  api_football_id INTEGER NOT NULL
+		type TEXT NOT NULL,
+		logo TEXT,
+  api_football_id INTEGER NOT NULL,
+		country_code TEXT,
+		country_name TEXT
 );
 
 CREATE TABLE teams
@@ -83,7 +87,7 @@ CREATE TABLE countries_leagues
   league_id INTEGER REFERENCES leagues (id) ON DELETE CASCADE
 );
 
-CREATE TABLE leagues_teams
+CREATE TABLE leaugues_teams
 (
   id SERIAL PRIMARY KEY,
   league_id INTEGER REFERENCES leagues (id) ON DELETE CASCADE,

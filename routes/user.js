@@ -31,14 +31,16 @@ router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const usersLeagues = await db.query(
-      `SELECT * FROM users WHERE id = $1
+      `SELECT * FROM users 
 			JOIN users_leagues AS ul
 			ON users.id = ul.user_id 
 			JOIN leagues as l
-			ON ul.league_id = l.id`,
+			ON ul.league_id = l.id
+   WHERE users.id = $1`,
       [id]
     );
-    return usersLeagues;
+    const leagues = usersLeagues.rows;
+    return leagues;
   } catch (e) {
     return next(e);
   }
@@ -47,24 +49,50 @@ router.get("/:id", async (req, res, next) => {
 // GET user teams
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
+
   try {
     const usersTeams = await db.query(
-      `SELECT * FROM users WHERE id = $1
-			JOIN users_teams AS ut
-			ON users.id = ut.user_id 
-			JOIN teams as t
-			ON ut.team_id = t.id`,
+      `SELECT * FROM users
+      JOIN users_teams AS ut
+      ON users.id = ut.user_id 
+      JOIN teams as t
+      ON ut.team_id = t.id
+      WHERE users.id=$1`,
       [id]
     );
-    return usersTeams;
+    const teams = usersTeams.rows;
+    return teams;
   } catch (e) {
     return next(e);
   }
 });
 
-// GET user favorite teams
-// router.get("/:id", async (req, res, next) => {
-// 	const {id}
-// })
+// UPDATE user leagues
+router.patch("/:id/league/:league_id", async (req, res, next) => {
+  const { id, league_id } = req.params;
+  try {
+    const updateUserLeague = await db.query(
+      `INSERT INTO users_leagues(user_id, league_id)
+			VALUES ($1,$2) RETURNING user_id, league_id`,
+      [id, league_id]
+    );
+  } catch (e) {
+    return next(e);
+  }
+});
+
+// UPDATE user teams
+router.patch("/:id/team/:team_id", async (req, res, next) => {
+  const { id, team_id } = req.params;
+  try {
+    const updateUserLeague = await db.query(
+      `INSERT INTO users_teams(user_id, team_id)
+			VALUES ($1,$2) RETURNING user_id, league_id`,
+      [id, team_id]
+    );
+  } catch (e) {
+    return next(e);
+  }
+});
 
 module.exports = router;

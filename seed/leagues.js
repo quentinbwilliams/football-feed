@@ -4,6 +4,8 @@ const db = require("../db");
 const LEAGUES = [];
 
 function getLeagues() {
+  // REQUEST TO API FOOTBALL FOR ALL LEAGUES
+  // RESPONSE ARRAY IS PUSHED TO GLOBAL LEAGUES ARRAY
   const options = {
     method: "GET",
     url: "https://api-football-v1.p.rapidapi.com/v3/leagues",
@@ -25,7 +27,9 @@ function getLeagues() {
 }
 
 function makeLeagueObjs(LEAGUES) {
-  // CALL getLeagues() TO PUSH LEAGUES RES TO LEAGUES ARRAY. POP LEAGUES ARRAY TO HANDLE DATA
+  // CALL getLeagues() TO PUSH LEAGUES RES TO LEAGUES ARRAY.
+  // POP LEAGUES ARRAY TO GET DATA ARRAY FOR HANDLING, LEAGUES SHOULD BE EMPTY
+  // LOOP THROUGH ARRAY AND CREATE AN OBJECT WITH EACH LEAGUE. PUSH THE OBJECT TO LEAGUES ARRAY.
   let l = LEAGUES.pop();
   let array = [];
   for (let i = 0; i < l.length; i++) {
@@ -72,3 +76,5 @@ async function seedLeagues(LEAGUES) {
     console.log(e);
   }
 }
+
+module.exports = LEAGUES;

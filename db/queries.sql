@@ -12,3 +12,12 @@ ON users.id = ut.user_id
 JOIN teams as t
 ON ut.team_id = t.id
 WHERE users.id='1';
+
+-- GET LEAGUES
+SELECT name, api_football_id, type, country_code
+FROM leagues;
+
+-- SELECT LEAGUE BY COUNTRY CODE
+SELECT name, api_football_id, type, country_code
+FROM leagues
+WHERE country_code='World';

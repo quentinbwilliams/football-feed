@@ -83,7 +83,7 @@ CREATE TABLE users_teams
 CREATE TABLE countries_leagues
 (
   id SERIAL PRIMARY KEY,
-  country_id INTEGER REFERENCES countries (id) ON DELETE CASCADE,
+  country_code TEXT REFERENCES countries (code) ON DELETE CASCADE,
   league_id INTEGER REFERENCES leagues (id) ON DELETE CASCADE
 );
 
@@ -153,7 +153,7 @@ INSERT INTO users_teams (user_id, team_id) VALUES
 (3,2),
 (4,1);
 
-INSERT INTO countries_leagues (country_id, league_id) VALUES
+INSERT INTO countries_leagues (country_code, league_id) VALUES
 (1,1),
 (2,2);
 
@@ -171,3 +171,4 @@ INSERT INTO teams_players (team_id, player_id) VALUES
 (4,1);
 
 --! NEED TEAMS_COACHES
+

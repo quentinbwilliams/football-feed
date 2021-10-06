@@ -2,17 +2,7 @@
 // OUR DB DOESN'T NEED ALL THE TEAMS FROM ALL THE LEAGUES
 const axios = require("axios").default;
 const db = require("../db");
-
-async function getLeaguesFromCountry(countryCode) {
-	// Pass countryCode arg to SQL query
-	const result = await db.query(
-		`SELECT * FROM countries
-		WHERE code = $1`,
-		[countryCode]
-	);
-	const leagues = result.rows;
-	return leagues;
-}
+const SEASON = require("../season/season");
 
 const countryLeagues = [];
 
@@ -41,7 +31,7 @@ const getTeamsFromLeague = async (leagueID) => {
 		const options = {
 			method: "GET",
 			params: {
-				season: "2021",
+				season: `${SEASON}`,
 				league: `${leagueID}`
 			},
 			headers: {

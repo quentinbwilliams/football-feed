@@ -69,6 +69,4 @@ class Team {
   }
 }
 
-const lfc = new Team((apiFootballTeamID = 33), (apiFootballLeagueID = 39));
-
 module.exports = Team;

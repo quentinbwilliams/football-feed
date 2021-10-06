@@ -22,7 +22,6 @@ class League {
     // SETS PROPERTY OF LEAGUE WITH RESULTS PROVIDED BY CALLING API FOOTBALL
     try {
       const options = {
-        method: "GET",
         params: {
           season: `${season}`,
           league: `${apiFootballID}`,

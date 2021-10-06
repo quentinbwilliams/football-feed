@@ -1,4 +1,4 @@
-const db = require("./db");
+const db = require("../db");
 
 const seedCountriesLeagues = async () => {
   try {
@@ -23,3 +23,5 @@ const seedCountriesLeagues = async () => {
     console.log("ERROR", err);
   }
 };
+
+seedCountriesLeagues()

@@ -48,8 +48,16 @@ CREATE TABLE teams
 (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  api_football_id UNIQUE INTEGER,
-	logo TEXT NOT NULL
+  api_football_id INTEGER UNIQUE,
+	city TEXT,
+	country TEXT,
+	founded INTEGER,
+	national BOOLEAN,
+	logo TEXT NOT NULL,
+	stadium_name TEXT,
+	stadium_id INTEGER,
+	stadium_capacity INTEGER,
+	stadium_image TEXT
 );
 
 CREATE TABLE players

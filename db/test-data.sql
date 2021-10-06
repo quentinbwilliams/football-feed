@@ -37,11 +37,11 @@ CREATE TABLE leagues
 (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-		type TEXT NOT NULL,
-		logo TEXT,
+	type TEXT NOT NULL,
+	logo TEXT,
   api_football_id UNIQUE INTEGER,
-		country_code TEXT,
-		country_name TEXT
+	country_code TEXT,
+	country_name TEXT
 );
 
 CREATE TABLE teams

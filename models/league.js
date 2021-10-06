@@ -32,15 +32,38 @@ class League {
       const request = await axios.get(
         "https://api-football-v1.p.rapidapi.com/v3/standings",
         options
-			);
-			const leagueData = request.data.response[0].league;
-			const standings = leagueData.standings[0];
-			// set object properties
-			this.name = leagueData.name;
-			this.country = leagueData.country;
-			this.logo = leagueData.logo;
-			this.flag = leagueData.flag
+      );
+      const leagueData = request.data.response[0].league;
+      const standings = leagueData.standings[0];
+      // set object properties
+      this.name = leagueData.name;
+      this.country = leagueData.country;
+      this.logo = leagueData.logo;
+      this.flag = leagueData.flag;
       this.teams = standings;
+    } catch (e) {
+      console.log("error", e);
+    }
+  }
+
+  async queryLeague() {
+    try {
+      const query = await db.query(
+        `SELECT name, api_football_id, id,
+				FROM leauges
+				WHERE api_fooball_id = $1`,
+        [this.apiFootballID]
+      );
+      const league = query.rows[0];
+      return league;
+    } catch (e) {
+      console.log("error", e);
+    }
+  }
+
+  async seedLeagueData() {
+    try {
+      const insert = await db.query(`INSERT INTO leagues ()`);
     } catch (e) {
       console.log("error", e);
     }

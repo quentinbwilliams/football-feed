@@ -59,21 +59,3 @@ const getTeamsFromLeague = async (leagueID) => {
 		console.log("error", e);
 	}
 };
-
-const sayHi = () => {
-	const hi = "HI!"
-	return hi
-}
-
-const slowHi = () => {
-	const hi = setTimeout(sayHi(), 50000);
-	return hi;
-}
-
-const myAsync = async () => {
-	try {
-		const hi = await sayHi();
-	} catch (e) {
-		console.log("err", e);
-	}
-}

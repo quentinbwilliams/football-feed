@@ -7,26 +7,18 @@ const league = require("./league");
 class Team {
   constructor(apiFootballTeamID) {
     this.apiFootballTeamID = apiFootballTeamID;
-  }
-
-  getTeamInfo() {
-    // RETURNS OBJECT WITH TEAM OBJECT AND VENUE OBJECT
-  }
-  getAciveSquad() {
-    // RETURN ALL CURRENT SQUAD PLAYERS
-  }
-
-  getPlayerStats() {
-    // RETURN MATCH STATS FOR PLAYERS
-  }
-
-  getTeamStats() {
-    // RETURN STATS FOR TEAM IN CURRENT LEAGUE AND TEAM
-  }
-
-  getTransfersNews() {
-    // RETURN ANY RESULTS FOR TRANSFER NEWS
-  }
+	}
+	
+	async initTeamData() {
+		const options = {
+			params: {id: `${this.apiFootballTeamID}`},
+			headers: headers
+		}
+		const request = await axios.get(
+      "https://api-football-v1.p.rapidapi.com/v3/teams", options
+		);
+		console.log(request); 
+	}
 }
 
 module.exports = Team;

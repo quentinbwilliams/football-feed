@@ -6,7 +6,6 @@ const axios = require("axios").default;
 class League {
   constructor(apiFootballID) {
     this.apiFootballID = apiFootballID;
-    this.teams = [];
   }
 
   static async getAllLeagues() {
@@ -39,6 +38,7 @@ class League {
       this.country = leagueData.country;
       this.logo = leagueData.logo;
       this.flag = leagueData.flag;
+      this.type = leagueData.type;
       this.teams = standings;
     } catch (e) {
       console.log("error", e);
@@ -60,65 +60,70 @@ class League {
     }
   }
 
-  async seedLeagueData() {
-    try {
-      const insert = await db.query(`INSERT INTO leagues ()`);
-    } catch (e) {
-      console.log("error", e);
+  async createLeagueRow() {
+    if (this.name & this.country & this.logo & (this.flag !== null)) {
+      try {
+        const insert = await db.query(
+          `INSERT INTO leagues (name, country, logo, flag, api_football_id) VALUES ($1,$2,$3,$4,$5)`,
+          [this.name, this.country, this.logo, this.flag, this.apiFootballID]
+        );
+      } catch (e) {
+        console.log("error", e);
+      }
     }
   }
 
-  static async getLeaguesInCountry(countryCode) {
+  async getLeaguesInCountry() {
     // RETURNS ALL LEAGUES IN A COUNTRY GIVEN A COUNTRY CODE
     const res = await db.query(
       `SELECT name, api_football_id, type, country_code
 			FROM leagues
-			WHERE country_code = $1`,
-      [countryCode]
+			WHERE country_name = $1`,
+      [this.country]
     );
     const leauges = res.rows;
-    return res.rows;
+    return leauges;
   }
 
-  static async getLeaguesByTypeInCountry(countryCode, leagueType) {
+  async getLeaguesByTypeInCountry() {
     // RETURNS ALL LEAGUES OF A SPECIFIC TYPE IN A CERTAIN COUNTRY
     const res = await db.query(
       `SELECT name, api_football_id, type, country_code
 			FROM leauges
-			WHERE country_code = $1
+			WHERE country_name = $1
 			AND type = $2`,
-      [countryCode, leagueType]
+      [this.country, this.type]
     );
     return res.rows;
   }
 
-  static async getLeagueByApiId(apiFootballID) {
+  async getLeagueByApiId() {
     const res = await db.query(
       `SELECT name, api_football_id, type, country_code
 			FROM leagues
 			WHERE api_football_id = $1`,
-      [apiFootballID]
+      [this.apiFootballID]
     );
-    return res.row[0];
+    return res.rows[0];
   }
 
-  static async getStandings(leagueID) {
+  async getStandings(leagueID) {
     //CALL API FOOTBALL FOR CURRENT STANDINGS. RESULT FROM API WILL  CONTAIN A LIST OF ALL TEAMS AND THEIR DATA
   }
 
-  static async getLiveMatches(leagueID) {
+  async getLiveMatches(leagueID) {
     // CALL API FOOTBALL LIVE MATCHES, OTHERWISE RETURN FALSE
   }
 
-  static async getMatchweek(leagueID) {
+  async getMatchweek(leagueID) {
     // CALL API FOOTBALL AND RETURN THE MATCH SCHEDULE FOR THE UPCOMING MATCHWEEK
   }
 
-  static async getScorers(leagueID) {
+  async getScorers(leagueID) {
     // CALL API FOOTBALL AND RETURN THE TOP SCORERS FOR THE LEAGUE
   }
 
-  static async getCompletedMatches(leagueID) {
+  async getCompletedMatches(leagueID) {
     // CALL FOOTBALL API RETURN THE MATCHES THAT HAVE BEEN PLAYED SO FAR IN THE SEASON
   }
 }

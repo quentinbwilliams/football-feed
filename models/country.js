@@ -7,6 +7,7 @@ class Country {
     this.name = name;
     this.code = code;
   }
+
   static async getCountryWithCode(countryCode) {
     // RETURN COUNTRY ROW FROM DB
     const query = await db.query(

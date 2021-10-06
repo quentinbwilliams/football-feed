@@ -1,12 +1,10 @@
 const db = require("../db/db");
 const season = require("../season/season");
 const headers = require("../headers/api-football");
+const axios = require("axios").default;
 
 class League {
-  constructor(name, country, standings, apiFootballID) {
-    this.name = name;
-    this.country = country;
-    this.standings = standings;
+  constructor(apiFootballID) {
     this.apiFootballID = apiFootballID;
     this.teams = [];
   }
@@ -20,22 +18,29 @@ class League {
     return res.rows;
   }
 
-  static async getTeamsInLeague() {
-    // SETS PROPERTY OF TEAMS ON LEAGUE OBJ TO RESULT OF QUERY TO API FOOTBALL
+  async initLeagueData() {
+    // SETS PROPERTY OF LEAGUE WITH RESULTS PROVIDED BY CALLING API FOOTBALL
     try {
       const options = {
         method: "GET",
         params: {
           season: `${season}`,
-          league: `${this.apiFootballID}`,
+          league: `${apiFootballID}`,
         },
         headers: headers,
       };
       const request = await axios.get(
         "https://api-football-v1.p.rapidapi.com/v3/standings",
         options
-      );
-      this.teams.push(request.data);
+			);
+			const leagueData = request.data.response[0].league;
+			const standings = leagueData.standings[0];
+			// set object properties
+			this.name = leagueData.name;
+			this.country = leagueData.country;
+			this.logo = leagueData.logo;
+			this.flag = leagueData.flag
+      this.teams = standings;
     } catch (e) {
       console.log("error", e);
     }

@@ -39,7 +39,7 @@ CREATE TABLE leagues
   name TEXT NOT NULL,
 		type TEXT NOT NULL,
 		logo TEXT,
-  api_football_id INTEGER NOT NULL,
+  api_football_id UNIQUE INTEGER,
 		country_code TEXT,
 		country_name TEXT
 );
@@ -48,7 +48,8 @@ CREATE TABLE teams
 (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  api_football_id INTEGER
+  api_football_id UNIQUE INTEGER,
+	logo TEXT NOT NULL
 );
 
 CREATE TABLE players
@@ -56,7 +57,7 @@ CREATE TABLE players
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   nationality TEXT,
-  api_football_id INTEGER
+  api_football_id UNIQUE INTEGER
 );
 
 CREATE TABLE coaches
@@ -87,11 +88,11 @@ CREATE TABLE countries_leagues
   league_id INTEGER REFERENCES leagues (id) ON DELETE CASCADE
 );
 
-CREATE TABLE leaugues_teams
+CREATE TABLE leagues_teams
 (
   id SERIAL PRIMARY KEY,
-  league_id INTEGER REFERENCES leagues (id) ON DELETE CASCADE,
-  team_id INTEGER REFERENCES teams (id) ON DELETE CASCADE
+  league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE,
+  team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE
 );
 
 CREATE TABlE teams_players

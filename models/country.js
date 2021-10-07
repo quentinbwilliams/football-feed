@@ -23,30 +23,38 @@ class Country {
   }
 
   static async apiGetAllCountries() {
-    const options = {
-      headers: headers,
-    };
-    const request = await axios.get(
-      "https://api-football-v1.p.rapidapi.com/v3/countries",
-      options
-    );
-    const countries = request.data.response;
-    return countries;
+    try {
+      const options = {
+        headers: headers,
+      };
+      const request = await axios.get(
+        "https://api-football-v1.p.rapidapi.com/v3/countries",
+        options
+      );
+      const countries = request.data.response;
+      return countries;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async apiGetCountryData() {
-    const options = {
-      params: {
-        code: this.code,
-      },
-      headers: headers,
-    };
-    const request = await axios.get(
-      "https://api-football-v1.p.rapidapi.com/v3/countries",
-      options
-    );
-    const info = request.data.response;
-    this.info = info;
+    try {
+      const options = {
+        params: {
+          code: this.code,
+        },
+        headers: headers,
+      };
+      const request = await axios.get(
+        "https://api-football-v1.p.rapidapi.com/v3/countries",
+        options
+      );
+      const info = request.data.response;
+      this.info = info;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async dbInsertCountryData() {
@@ -81,12 +89,15 @@ class Country {
   async apiGetTeamsInCountry() {
     try {
       const options = {
-        params: { country: this.name },
+        params: {
+          country: this.name,
+        },
         headers: headers,
       };
       const request = await axios.get(
         "https://api-football-v1.p.rapidapi.com/v3/teams"
       );
+      this.teams = request.response;
     } catch (e) {
       console.log(e);
     }
@@ -94,15 +105,19 @@ class Country {
 
   async dbGetLeaguesInCountry() {
     // RETURNS ALL LEAGUES IN A COUNTRY GIVEN A COUNTRY CODE
-    const res = await db.query(
-      `SELECT name, api_football_id, type, country_code
+    try {
+      const res = await db.query(
+        `SELECT name, api_football_id, type, country_code
 			FROM leagues
 			WHERE country_code = $1`,
-      [this.code]
-    );
-    const leauges = res.rows;
-    this.leauges = leauges;
-    return leauges;
+        [this.code]
+      );
+      const leauges = res.rows;
+      this.leauges = leauges;
+      return leauges;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async apiGetNationalTeam() {

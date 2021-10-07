@@ -4,9 +4,9 @@ const headers = require("../headers/api-football");
 
 class Country {
   constructor(code, name, flag) {
-    this.code = code || 'WF';
+    this.code = code || "WF";
     this.name = name;
-    this.flag = flag;
+    this.flag = flag || "N/A";
   }
 
   static async dbGetCountries() {
@@ -54,6 +54,38 @@ class Country {
       const insert = await db.query(
         `INSERT INTO countries (code, name, flag) VALUES ($1,$2,$3) RETURNING code, name, flag`,
         [this.code, this.name, this.flag]
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async apiGetLeaguesInCountry() {
+    try {
+      const options = {
+        params: {
+          country: this.name,
+        },
+        headers: headers,
+      };
+      const request = await axios.get(
+        "https://api-football-v1.p.rapidapi.com/v3/leagues",
+        options
+      );
+      this.leagues = request.response;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async apiGetTeamsInCountry() {
+    try {
+      const options = {
+        params: { country: this.name },
+        headers: headers,
+      };
+      const request = await axios.get(
+        "https://api-football-v1.p.rapidapi.com/v3/teams"
       );
     } catch (e) {
       console.log(e);

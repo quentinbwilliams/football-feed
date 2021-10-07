@@ -24,9 +24,9 @@ CREATE TABLE users
 
 CREATE TABLE countries
 (
-	id SERIAL PRIMARY KEY,
-  code TEXT UNIQUE NOT NULL,
-  name TEXT NOT NULL,
+  id SERIAL PRIMARY KEY,
+  name TEXT UNIQUE NOT NULL,
+  code TEXT NOT NULL,
   flag TEXT NOT NULL
 );
 
@@ -44,11 +44,11 @@ CREATE TABLE teams
 (
   api_football_id INTEGER PRIMARY KEY,
   name TEXT UNIQUE,
-	logo TEXT NOT NULL,
-	city TEXT,
 	country TEXT,
 	founded INTEGER,
 	national BOOLEAN
+	logo TEXT NOT NULL,
+	city TEXT,
 );
 
 CREATE TABLE players
@@ -68,9 +68,9 @@ CREATE TABLE coaches
 );
 
 CREATE TABLE IF NOT EXISTS users_countries
-(id SERIAL PRIMARY KEY,
+(	id SERIAL PRIMARY KEY,
 	user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
-	country_code TEXT REFERENCES countries (code) ON DELETE CASCADE
+	country_name TEXT REFERENCES countries (name) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS users_leagues
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS users_teams
 CREATE TABLE countries_leagues
 (
   id SERIAL PRIMARY KEY,
-  country_code TEXT REFERENCES countries (code) ON DELETE CASCADE,
+  country_name TEXT REFERENCES countries (name) ON DELETE CASCADE,
   league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE
 );
 

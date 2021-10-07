@@ -3,12 +3,26 @@ const db = require("../db/db");
 const headers = require("../headers/api-football");
 
 class Country {
-  constructor(code, name) {
-    this.code = code;
+  constructor(code, name, flag) {
+    this.code = code || 'WF';
     this.name = name;
+    this.flag = flag;
   }
 
-  static async getCountries() {
+  static async dbGetCountries() {
+    try {
+      const query = await db.query(
+        `SELECT code, name, flag
+			FROM countries`
+      );
+      const countries = query.rows;
+      return countries;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  static async apiGetAllCountries() {
     const options = {
       headers: headers,
     };
@@ -20,7 +34,7 @@ class Country {
     return countries;
   }
 
-  async initCountryData() {
+  async apiGetCountryData() {
     const options = {
       params: {
         code: this.code,
@@ -35,20 +49,18 @@ class Country {
     this.info = info;
   }
 
-  async insertCountryData(next) {
-    for (let i = 0; i < this.info.length; i++) {
-      try {
-        const insert = await db.query(
-          `INSERT INTO countries (name, code, flag) VALUES ($1,$2,$3) RETURNING name, code, flag`,
-          [this.info[0].name, this.info[0].code, this.info[0].flag]
-        );
-      } catch (e) {
-        return next(e);
-      }
+  async dbInsertCountryData() {
+    try {
+      const insert = await db.query(
+        `INSERT INTO countries (code, name, flag) VALUES ($1,$2,$3) RETURNING code, name, flag`,
+        [this.code, this.name, this.flag]
+      );
+    } catch (e) {
+      console.log(e);
     }
   }
 
-  async getLeaguesInCountry() {
+  async dbGetLeaguesInCountry() {
     // RETURNS ALL LEAGUES IN A COUNTRY GIVEN A COUNTRY CODE
     const res = await db.query(
       `SELECT name, api_football_id, type, country_code
@@ -61,7 +73,7 @@ class Country {
     return leauges;
   }
 
-  getNationalTeam() {
+  async apiGetNationalTeam() {
     // CALL API FOR INFO ON COUNTRIES NATIONAL TEAMS
   }
 }

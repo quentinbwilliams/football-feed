@@ -9,7 +9,7 @@ class League {
     this.apiFootballID = apiFootballID;
   }
 
-  static async getAllLeagues() {
+  static async dbGetAllLeagues() {
     // RETURNS ALL LEAGUES IN DB
     const res = await db.query(
       `SELECT name, api_football_id, type, country_code
@@ -18,7 +18,7 @@ class League {
     return res.rows;
   }
 
-  async initLeagueData() {
+  async apiGetLeagueData() {
     // SETS PROPERTY OF LEAGUE WITH RESULTS PROVIDED BY CALLING API FOOTBALL
     try {
       const options = {
@@ -50,8 +50,8 @@ class League {
     }
   }
 
-  async insertLeagueData() {
-    if (this.name & this.country & this.logo & (this.flag !== null)) {
+  async dbInsertLeagueData() {
+    if ((this.name & this.country & this.logo & this.flag) !== null) {
       try {
         const insert = await db.query(
           `INSERT INTO leagues (name, country, logo, flag, api_football_id) VALUES ($1,$2,$3,$4,$5)`,
@@ -63,7 +63,7 @@ class League {
     }
   }
 
-  async queryLeague() {
+  async dbQueryLeague() {
     try {
       const query = await db.query(
         `SELECT name, api_football_id, id,
@@ -78,7 +78,7 @@ class League {
     }
   }
 
-  async getLeaguesByTypeInCountry() {
+  async dbGetLeaguesByTypeInCountry() {
     // RETURNS ALL LEAGUES OF A SPECIFIC TYPE IN A CERTAIN COUNTRY
     const res = await db.query(
       `SELECT name, api_football_id, type, country_code
@@ -90,7 +90,7 @@ class League {
     return res.rows;
   }
 
-  async getLeagueByApiId() {
+  async dbGetLeagueByApiId() {
     const res = await db.query(
       `SELECT name, api_football_id, type, country_code
 			FROM leagues
@@ -100,11 +100,7 @@ class League {
     return res.rows[0];
   }
 
-  async getStandings(leagueID) {
-    //CALL API FOOTBALL FOR CURRENT STANDINGS. RESULT FROM API WILL  CONTAIN A LIST OF ALL TEAMS AND THEIR DATA
-  }
-
-  async getLiveMatches(leagueID) {
+  async apiGetLiveMatches(leagueID) {
     // CALL API FOOTBALL LIVE MATCHES, OTHERWISE RETURN FALSE
   }
 

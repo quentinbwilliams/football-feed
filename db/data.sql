@@ -69,19 +69,19 @@ CREATE TABLE coaches
 
 CREATE TABLE IF NOT EXISTS users_countries
 (	id SERIAL PRIMARY KEY,
-	user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
+	username TEXT REFERENCES users (username) ON DELETE CASCADE,
 	country_name TEXT REFERENCES countries (name) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS users_leagues
 (id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
+  username TEXT REFERENCES users (username) ON DELETE CASCADE,
   league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS users_teams
 (id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
+  username TEXT REFERENCES users (username) ON DELETE CASCADE,
   team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE
 );
 

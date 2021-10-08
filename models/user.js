@@ -1,21 +1,45 @@
 const db = require("../db/db");
 
 class User {
-	constructor(username, email, password, favoriteLeagues, favoriteTeams) {
+	constructor(username, email, password) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.favoriteLeagues = favoriteLeagues;
-		this.favoriteTeams = favoriteTeams;
 	}
 
-	async getLeagues() {
-		const query = db.query(
-			`SELECT `
+	async dbSetLeagues(leagueID) {
+		const insert = await db.query(
+			`INSERT INTO users_leagues (username, league_id)
+			VALUES ($1,$2)`, [this.username, leagueID]
 		)
 	}
 
-	async getTeams() {
+	async dbGetLeagues() {
+		// QUERY USERS_LEAGUES WITH USERNAME 
+		const leaguesArr = [];
+		const joinQuery = await db.query(
+			`SELECT league_id
+			FROM users_leagues
+			WHERE username = $1`, [this.username]
+		);
+		const leagueIDs = joinQuery.rows;
+		for (let i = 0; i < leagueIDs.length; i++) {
+			const leagueID = leagueIDs[i];
+			const leagueQuery = await db.query(
+				`SELECT api_football_id, name, country_name, type, logo, country_code
+				FROM leagues WHERE api_football_id = $1`, [leagueID]
+			);
+			const league = leagueQuery.rows[0];
+			leaguesArr.push(league);
+		}
+		this.leagues = leagues
+	}
+
+	async dbSetTeams() {
+
+	}
+
+	async dbGetTeams() {
 		const
 	}
 

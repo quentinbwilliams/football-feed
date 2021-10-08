@@ -32,7 +32,7 @@ CREATE TABLE countries
 
 CREATE TABLE leagues
 (
-  api_football_id  INTEGER PRIMARY KEY,
+  api_football_id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
 	country_name TEXT,
 	type TEXT NOT NULL,
@@ -68,27 +68,30 @@ CREATE TABLE coaches
 );
 
 CREATE TABLE IF NOT EXISTS users_countries
-(	id SERIAL PRIMARY KEY,
-	username TEXT REFERENCES users (username) ON DELETE CASCADE,
-	country_name TEXT REFERENCES countries (name) ON DELETE CASCADE
+(	
+	id SERIAL PRIMARY KEY,
+	user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
+	country_id INTEGER REFERENCES countries (id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS users_leagues
-(id SERIAL PRIMARY KEY,
-  username TEXT REFERENCES users (username) ON DELETE CASCADE,
+(
+	id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
   league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS users_teams
-(id SERIAL PRIMARY KEY,
-  username TEXT REFERENCES users (username) ON DELETE CASCADE,
+(
+	id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
   team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE
 );
 
 CREATE TABLE countries_leagues
 (
   id SERIAL PRIMARY KEY,
-  country_name TEXT REFERENCES countries (name) ON DELETE CASCADE,
+  country_id INTEGER REFERENCES countries (id) ON DELETE CASCADE,
   league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE
 );
 

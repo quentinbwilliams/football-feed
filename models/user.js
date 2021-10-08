@@ -7,12 +7,16 @@ class User {
 		this.password = password;
 	}
 
+	static async authenticate()
+
 	async dbSetLeagues(leagueID) {
 		const insert = await db.query(
 			`INSERT INTO users_leagues (username, league_id)
 			VALUES ($1,$2)`, [this.username, leagueID]
 		)
 	}
+
+	//! Join on user id not username
 
 	async dbGetLeagues() {
 		// QUERY USERS_LEAGUES WITH USERNAME 
@@ -32,7 +36,7 @@ class User {
 			const league = leagueQuery.rows[0];
 			leaguesArr.push(league);
 		}
-		this.leagues = leagues
+		this.leagues = leaguesArr;
 	}
 
 	async dbSetTeams() {
@@ -63,9 +67,6 @@ class User {
 		// REGISTER USER
 	}
 
-	authenticate() {
-		// AUTHENTICATE USER
-	}
 }
 
 module.exports = User;

@@ -1,5 +1,4 @@
-const db = require("../db")
-const Country = require("../../models/country");
+const db = require("../db");
 const League = require("../../models/league");
 
 /*
@@ -19,7 +18,7 @@ const League = require("../../models/league");
       leagues[i].league.type,
       leagues[i].league.logo,
       leagues[i].country.code
-		);
-		const insert = await league.dbInsertLeagueData()
+    );
+    const insert = await league.dbInsertLeagueData();
   }
 })();

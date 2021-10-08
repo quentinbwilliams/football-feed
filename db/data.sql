@@ -43,7 +43,7 @@ CREATE TABLE leagues
 CREATE TABLE teams
 (
   api_football_id INTEGER PRIMARY KEY,
-  name TEXT UNIQUE,
+  name TEXT,
 	country TEXT,
 	founded INTEGER,
 	national BOOLEAN

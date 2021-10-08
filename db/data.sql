@@ -46,9 +46,9 @@ CREATE TABLE teams
   name TEXT,
 	country TEXT,
 	founded INTEGER,
-	national BOOLEAN
+	national BOOLEAN,
 	logo TEXT NOT NULL,
-	city TEXT,
+	city TEXT
 );
 
 CREATE TABLE players

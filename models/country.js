@@ -10,6 +10,7 @@ class Country {
   }
 
   static async dbGetCountries() {
+    // QUERY DATABASE FOR ALL COUNTRIES, RETURNING ARRAY WITH CODE, NAME, FLAG.
     try {
       const query = await db.query(
         `SELECT code, name, flag
@@ -23,6 +24,7 @@ class Country {
   }
 
   static async apiGetAllCountries() {
+    // REQUEST API FOR ALL COUNTRIES, RETURNING ARRAY WITH COUNTRY JSON.
     try {
       const options = {
         headers: headers,
@@ -39,6 +41,7 @@ class Country {
   }
 
   async apiGetCountryData() {
+    // REQUEST API FOR COUNTRY DATA (CODE, NAME, FLAG), SETTING THE INFO ATTRIBUTE ON INSTANCE AS RESULT OF REQUEST.
     try {
       const options = {
         params: {
@@ -58,6 +61,7 @@ class Country {
   }
 
   async dbInsertCountryData() {
+    // INSERT ROW WITH COUNTRY DATA INTO DATABASE.
     try {
       const insert = await db.query(
         `INSERT INTO countries (code, name, flag) VALUES ($1,$2,$3) RETURNING code, name, flag`,
@@ -69,6 +73,7 @@ class Country {
   }
 
   async apiGetLeaguesInCountry() {
+    // REQUEST API FOR ALL LEAGUES IN COUNTRY, RETURNS ARRAY WITH JSON CONTAINING LEAGUE, COUNTRY, SEASONS OBJECTS. LEAGUES ATTRIBUTE ON INSTANCE IS SET TO RESULT OF REQUEST.
     try {
       const options = {
         params: {
@@ -80,44 +85,33 @@ class Country {
         "https://api-football-v1.p.rapidapi.com/v3/leagues",
         options
       );
-      this.leagues = request.response;
+      this.leagues = request.data.response;
     } catch (e) {
       console.log(e);
     }
   }
 
   async apiGetTeamsInCountry() {
+    // REQUEST API FOR ALL TEAMS IN COUNTRY, RETURNS ARRAY WITH JSON CONTAINING TEAM AND VENUE OBJECTS. TEAMS ATTRIBUTE ON INSTANCE IS SET TO RESULT OF REQUEST.
     try {
       const options = {
         params: {
-          country: this.name,
+          country: `${this.name}`,
         },
         headers: headers,
       };
       const request = await axios.get(
-        "https://api-football-v1.p.rapidapi.com/v3/teams"
+        "https://api-football-v1.p.rapidapi.com/v3/teams",
+        options
       );
-      this.teams = request.response;
+      this.teams = request.data.response;
     } catch (e) {
       console.log(e);
     }
   }
 
-  async dbGetLeaguesInCountry() {
-    // RETURNS ALL LEAGUES IN A COUNTRY GIVEN A COUNTRY CODE
-    try {
-      const res = await db.query(
-        `SELECT name, api_football_id, type, country_code
-			FROM leagues
-			WHERE country_code = $1`,
-        [this.code]
-      );
-      const leauges = res.rows;
-      this.leauges = leauges;
-      return leauges;
-    } catch (e) {
-      console.log(e);
-    }
+  async dbSetLeaguesInCountry() {
+    // INSERT ROWS INTO COUNTRIES_LEAGUES
   }
 
   async apiGetNationalTeam() {

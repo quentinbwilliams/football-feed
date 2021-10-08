@@ -2,6 +2,7 @@ const db = require("../db/db");
 const axios = require("axios").default;
 const headers = require("../headers/api-football");
 const season = require("../season/season");
+const NIL = require("uuid");
 
 class Team {
   constructor(apiFootballID, name, country, founded, national, logo, city) {
@@ -11,16 +12,16 @@ class Team {
     this.founded = founded;
     this.national = national;
     this.logo = logo;
-    this.city = this.city;
+    this.city = city || "NA";
   }
 
   async dbInsertTeam() {
     try {
       const insert = await db.query(
         `INSERT INTO teams (api_football_id, name, country, founded, national, logo, city)
-				VALUES ($1,$2,$3,$4,$5,$6)`,
+				VALUES ($1,$2,$3,$4,$5,$6,$7)`,
         [
-          this.apiFootballTeamID,
+          this.apiFootballID,
           this.name,
           this.country,
           this.founded,

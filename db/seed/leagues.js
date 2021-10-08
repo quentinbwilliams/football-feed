@@ -8,7 +8,6 @@ const League = require("../../models/league");
 - CREATE A ROW IN DB WITH LEAGUE DATA
 */
 
-
 (async () => {
   // static method gets all countries from api
   const leagues = await League.apiGetAllLeagues();

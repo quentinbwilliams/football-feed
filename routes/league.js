@@ -5,13 +5,14 @@ const router = express.Router();
 
 // GET LEAGUES BY COUNTRY CODE
 router.get("/:code", async (req, res, next) => {
-	const code = req.params.code;
-	const query = await db.query(
-		`SELECT name, api_football_id, type, country_code
+  const code = req.params.code;
+  const query = await db.query(
+    `SELECT name, api_football_id, type, country_code
 		FROM leagues
-		WHERE country_code=$1`, [code]
-	);
-	return query.rows;
-})
+		WHERE country_code=$1`,
+    [code]
+  );
+  return query.rows;
+});
 
 module.exports = router;

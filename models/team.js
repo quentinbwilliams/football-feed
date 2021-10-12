@@ -2,7 +2,6 @@ const db = require("../db/db");
 const axios = require("axios").default;
 const headers = require("../headers/api-football");
 const season = require("../season/season");
-const NIL = require("uuid");
 
 class Team {
   constructor(apiFootballID, name, country, founded, national, logo, city) {

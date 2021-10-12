@@ -1,3 +1,5 @@
 node_modules
 headers
 db/.test-data.sql
+config.js
+db/queries.sql

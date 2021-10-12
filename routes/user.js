@@ -1,19 +1,8 @@
-const db = require("../db");
+const db = require("../db/db");
 const express = require("express");
 const ExpressError = require("../error");
 const router = express.Router();
-
-function getUser(id) {
-  const userRes = await db.query(`SELECT name, type FROM users WHERE id = $1`, [
-    id,
-  ]);
-  // check if user exists
-  if (userRes.rows.length === 0) {
-    throw new ExpressError("User not found", 404);
-  }
-  const user = userRes.rows[0];
-  return user;
-}
+const User = require("../models/user");
 
 // GET user by id
 router.get("/:id", async (req, res, next) => {
@@ -36,7 +25,7 @@ router.get("/:id", async (req, res, next) => {
 			ON users.id = ul.user_id 
 			JOIN leagues as l
 			ON ul.league_id = l.id
-   WHERE users.id = $1`,
+	 		WHERE users.id = $1`,
       [id]
     );
     const leagues = usersLeagues.rows;
@@ -49,15 +38,14 @@ router.get("/:id", async (req, res, next) => {
 // GET user teams
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
-
   try {
     const usersTeams = await db.query(
       `SELECT * FROM users
-      JOIN users_teams AS ut
-      ON users.id = ut.user_id 
-      JOIN teams as t
-      ON ut.team_id = t.id
-      WHERE users.id=$1`,
+			JOIN users_teams AS ut
+			ON users.id = ut.user_id 
+			JOIN teams as t
+			ON ut.team_id = t.id
+			WHERE users.id=$1`,
       [id]
     );
     const teams = usersTeams.rows;

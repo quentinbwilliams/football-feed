@@ -1,4 +1,11 @@
 const db = require("../db/db");
+const bcrypt = require("bcrypt")
+const BCRYPT_WORK_FACTOR = require("../config");
+const SECRET_KEY = require("../config");
+const ExpressError = require("../error");
+const jwt = require("jsonwebtoken");
+
+
 
 class User {
 	constructor(username, email, password) {
@@ -7,19 +14,54 @@ class User {
 		this.password = password;
 	}
 
-	static async authenticate()
+	async authenticate() {
+		try {
+			const hashedPassword = await bcrypt.hash(this.password, BCRYPT_WORK_FACTOR);
+			const insert = await db.query(`
+			INSERT INTO users (username, email, password)
+			VALUES ($1,$2,$3)
+			RETURNING username, id` [this.username, this.email, hashedPassword])
+			return query.rows[0];
+		} catch (e) {
+			if (e.code === '23505') {
+				return next(new ExpressError("Username taken", 400));
+			}
+			return next(e)
+		}
+	}
+
+	async login() {
+		try {
+			const query = await db.query(`
+			SELECT id, username, password
+			FROM users
+			WHERE username = $1`, [this.username])
+			const user = query.rows[0];
+			if (user) {
+				if (await bcrypt.compare(password, user.password)) {
+					const token = jwt.sign(this.username, SECRET_KEY);
+					return token
+				}
+			} else {
+				throw new ExpressError("Invalid username/password", 400);
+			}
+		} catch (e) {
+			return next(e);
+		}
+	}
+
+
 
 	async dbSetLeagues(leagueID) {
 		const insert = await db.query(
-			`INSERT INTO users_leagues (username, league_id)
+			`INSERT INTO users_leagues (user_id, league_id)
 			VALUES ($1,$2)`, [this.username, leagueID]
 		)
 	}
 
-	//! Join on user id not username
 
 	async dbGetLeagues() {
-		// QUERY USERS_LEAGUES WITH USERNAME 
+		// QUERY USERS_LEAGUES WITH USER ID 
 		const leaguesArr = [];
 		const joinQuery = await db.query(
 			`SELECT league_id

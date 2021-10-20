@@ -2,16 +2,37 @@ const db = require("../db/db");
 const season = require("../season/season");
 const headers = require("../headers/api-football");
 const axios = require("axios").default;
+const Country = require("./country");
 
 class League {
 	// CREATE LEAGUE OBJECT WITH ID FROM API FOOTBALL
-	constructor(apiFootballID, name, countryName, type, logo, countryCode) {
+	constructor(apiFootballID) {
 		this.apiFootballID = apiFootballID;
-		this.name = name;
-		this.countryName = countryName;
-		this.type = type;
-		this.logo = logo || "NA";
-		this.countryCode = countryCode || "WF";
+	}
+
+	async init() {
+		// CALL .init() ON A LEAGUE OBJ WITH API ID TO SET LEAGUE INFO
+		const data = await League.dbGetLeague(this.apiFootballID);
+		this.name = data.name;
+		this.countryName = data.country_name;
+		this.type = data.type;
+		this.logo = data.logo;
+		this.countryCode = data.country_code;
+	}
+
+	static async dbGetLeague(apiFootballID) {
+		try {
+			const query = await db.query(
+				`SELECT api_football_id, name, country_name, type, logo, country_code
+				FROM leagues
+				WHERE api_football_id = $1`,
+				[apiFootballID]
+			);
+			const league = query.rows[0];
+			return league;
+		} catch (e) {
+			console.log("error", e);
+		}
 	}
 
 	static async apiGetAllLeagues() {
@@ -27,7 +48,7 @@ class League {
 			const leagues = request.data.response;
 			return leagues;
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 	}
 
@@ -73,30 +94,30 @@ class League {
 	}
 
 	async dbInsertLeagueData() {
-		if ((this.apiFootballID & this.name & this.countryName & this.type & this.logo & this.countryCode) !== null) {
+		if (
+			(this.apiFootballID &
+				this.name &
+				this.countryName &
+				this.type &
+				this.logo &
+				this.countryCode) !==
+			null
+		) {
 			try {
 				const insert = await db.query(
 					`INSERT INTO leagues (api_football_id, name, country_name, type, logo, country_code) VALUES ($1,$2,$3,$4,$5,$6)`,
-					[this.apiFootballID, this.name, this.countryName, this.type, this.logo, this.countryCode]
+					[
+						this.apiFootballID,
+						this.name,
+						this.countryName,
+						this.type,
+						this.logo,
+						this.countryCode,
+					]
 				);
 			} catch (e) {
 				console.log("error", e);
 			}
-		}
-	}
-
-	async dbQueryLeague() {
-		try {
-			const query = await db.query(
-				`SELECT name, api_football_id, id,
-				FROM leauges
-				WHERE api_fooball_id = $1`,
-				[this.apiFootballID]
-			);
-			const league = query.rows[0];
-			return league;
-		} catch (e) {
-			console.log("error", e);
 		}
 	}
 
@@ -110,16 +131,6 @@ class League {
 			[this.country, this.type]
 		);
 		return res.rows;
-	}
-
-	async dbGetLeagueByApiId() {
-		const res = await db.query(
-			`SELECT name, api_football_id, type, country_code
-			FROM leagues
-			WHERE api_football_id = $1`,
-			[this.apiFootballID]
-		);
-		return res.rows[0];
 	}
 
 	async apiGetLiveMatches(leagueID) {

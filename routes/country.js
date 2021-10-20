@@ -14,4 +14,16 @@ router.get("/", async (req, res, next) => {
 	}
 });
 
+// GET COUNTRY WITH CODE
+router.get("/:code", async (req, res, next) => {
+	try {
+		const { code } = req.params;
+		const country = new Country(code)
+		country.apiGetCountryData();
+		res.send(country);
+	} catch (e) {
+		next(e)
+	}
+})
+
 module.exports = router;

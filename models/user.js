@@ -4,6 +4,7 @@ const BCRYPT_WORK_FACTOR = require("../config");
 const SECRET_KEY = require("../config");
 const ExpressError = require("../error");
 const jwt = require("jsonwebtoken");
+const { query } = require("express");
 
 
 
@@ -14,14 +15,14 @@ class User {
 		this.password = password;
 	}
 
-	async authenticate() {
+	async createUser() {
 		try {
 			const hashedPassword = await bcrypt.hash(this.password, BCRYPT_WORK_FACTOR);
 			const insert = await db.query(`
 			INSERT INTO users (username, email, password)
 			VALUES ($1,$2,$3)
 			RETURNING username, id` [this.username, this.email, hashedPassword])
-			return query.rows[0];
+			return insert.rows[0];
 		} catch (e) {
 			if (e.code === '23505') {
 				return next(new ExpressError("Username taken", 400));
@@ -30,17 +31,18 @@ class User {
 		}
 	}
 
-	async login() {
+	async loginUser() {
 		try {
 			const query = await db.query(`
-			SELECT id, username, password
+			SELECT id, email, username, password
 			FROM users
-			WHERE username = $1`, [this.username])
+			WHERE email = $1`, [this.email])
 			const user = query.rows[0];
 			if (user) {
 				if (await bcrypt.compare(password, user.password)) {
-					const token = jwt.sign(this.username, SECRET_KEY);
-					return token
+					
+					// const token = jwt.sign(this.username, SECRET_KEY);
+					// return token
 				}
 			} else {
 				throw new ExpressError("Invalid username/password", 400);
@@ -51,7 +53,6 @@ class User {
 	}
 
 
-
 	async dbSetLeagues(leagueID) {
 		const insert = await db.query(
 			`INSERT INTO users_leagues (user_id, league_id)
@@ -59,16 +60,15 @@ class User {
 		)
 	}
 
-
 	async dbGetLeagues() {
 		// QUERY USERS_LEAGUES WITH USER ID 
 		const leaguesArr = [];
-		const joinQuery = await db.query(
+		const getLeagueIDs = await db.query(
 			`SELECT league_id
 			FROM users_leagues
 			WHERE username = $1`, [this.username]
 		);
-		const leagueIDs = joinQuery.rows;
+		const leagueIDs = getLeagueIDs.rows;
 		for (let i = 0; i < leagueIDs.length; i++) {
 			const leagueID = leagueIDs[i];
 			const leagueQuery = await db.query(
@@ -82,7 +82,15 @@ class User {
 	}
 
 	async dbSetTeams() {
-
+		try {
+			const query = await db.query(
+			`INSERT INTO users_teams (user_id, team_id)
+			VALUES ($1, $2)`, [this.id, teamID]
+			);
+			return query.rows[0];
+		} catch (e) {
+			return next(e)
+		}
 	}
 
 	async dbGetTeams() {

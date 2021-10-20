@@ -3,10 +3,11 @@ const app = express();
 const ExpressError = require("./error");
 const { authenticateJWT } = require("./middleware/auth");
 const countryRoutes = require("./routes/country");
+const leagueRoutes = require("./routes/league");
 
 app.use(express.json());
-app.set("view engine", "pug");
 app.use("/countries", countryRoutes);
+app.use("/leagues", leagueRoutes);
 
 app.use(function (req, res, next) {
 	const e = new ExpressError("Not found!", 404);

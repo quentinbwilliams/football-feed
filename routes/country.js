@@ -4,16 +4,14 @@ const express = require("express");
 const ExpressError = require("../error");
 const router = express.Router();
 
+// GET ALL COUNTRIES
 router.get("/", async (req, res, next) => {
-	const countries = await Country.dbGetCountries();
-	const countryObjs = countries.map((country) =>
-	  new Country(country.code, country.name, country.flag)
-	);
-	console.log(countryObjs)
-	res.render("country", {
-		title: "Countries",
-		countries: countryObjs
-	});
+	try {
+		const countries = await Country.dbGetCountries();
+		res.send(countries);
+	} catch (e) {
+		return next(e);
+	}
 });
 
 module.exports = router;

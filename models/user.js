@@ -1,59 +1,86 @@
 const db = require("../db/db");
 const bcrypt = require("bcrypt");
-const BCRYPT_WORK_FACTOR = require("../config");
+const saltRounds = 10;
 const SECRET_KEY = require("../config");
 const ExpressError = require("../error");
 const jwt = require("jsonwebtoken");
 const { query } = require("express");
+const validator = require("validator");
 
 class User {
-	constructor(username, email, password) {
+	constructor(username, email, id) {
 		this.username = username;
 		this.email = email;
-		this.password = password;
+		this.id = id;
 	}
 
-	async createUser() {
+	static async register(username, email, password) {
+		// IF USERNAME AND EMAIL ARE VALID STRINGS:
+		// HASH PASSWORD,
+		// INSERT USERNAME, EMAIL, HASHED PASSWORD INTO DB
+		// RETURN USER OBJECT WITH VALUES
 		try {
-			const hashedPassword = await bcrypt.hash(
-				this.password,
-				BCRYPT_WORK_FACTOR
-			);
-			const insert = await db.query(
-				`
-			INSERT INTO users (username, email, password)
-			VALUES ($1,$2,$3)
-			RETURNING username, id`[(this.username, this.email, hashedPassword)]
-			);
-			return insert.rows[0];
-		} catch (e) {
-			if (e.code === "23505") {
-				return next(new ExpressError("Username taken", 400));
+			if (validator.isEmail(email) & validator.isAlphanumeric(username)) {
+				const hashedPassword = await bcrypt.hash(password, saltRounds);
+				const insert = await db.query(
+					`INSERT INTO users (username, email, password)
+					VALUES ($1,$2,$3)
+					RETURNING username, email, id`,
+					[username, email, hashedPassword]
+				);
+				const data = insert.rows[0];
+				const user = new User(data.username, data.email, data.id);
+				return user;
+			} else {
+				throw new ExpressError("Invalid username or password");
 			}
-			return next(e);
+		} catch (e) {
+			console.log(e);
 		}
 	}
 
-	async loginUser() {
+	static async login(email, password) {
+		// QUERY DB FOR USER,
+		// IF USER EXISTS:
+		// COMPARE INPUT PASSWORD WITH SAVED PASSWORD;
+		// IF PASSWORDS MATCH:
+		// RETURN USER OBJECT WITH EMAIL, USERNAME, ID.
+		const userArr = [];
 		try {
 			const query = await db.query(
-				`
-			SELECT id, email, username, password
-			FROM users
-			WHERE email = $1`,
-				[this.email]
+				`SELECT id, email, username, password
+				FROM users
+				WHERE email = $1`,
+				[email]
 			);
-			const user = query.rows[0];
-			if (user) {
-				if (await bcrypt.compare(password, user.password)) {
-					const token = jwt.sign(this.username, SECRET_KEY);
-					return token;
+			const userData = query.rows[0];
+			if (userData) {
+				const compare = await bcrypt.compare(password, userData.password);
+				if (compare) {
+					const user = new User(userData.username, userData.email, userData.id);
+					userArr.push(user);
+				} else {
+					throw new ExpressError("Invalid password", 400);
 				}
 			} else {
-				throw new ExpressError("Invalid username/password", 400);
+				throw new ExpressError("Invalid username", 400);
 			}
 		} catch (e) {
-			return next(e);
+			console.log(e);
+		}
+		return userArr[0];
+	}
+
+	async init() {
+		try {
+			if (this.loginUser()) {
+				this.dbGetUserLeagues;
+				this.dbGetUserTeams;
+			} else {
+				return "login failed";
+			}
+		} catch (e) {
+			next(e);
 		}
 	}
 
@@ -131,7 +158,7 @@ class User {
 		this.leagues = leaguesArray;
 	}
 
-	async dbGetTeams() {
+	async dbGetUserTeams() {
 		const teamsArray = [];
 		const getTeamIDs = await db.query(
 			`SELECT team_id

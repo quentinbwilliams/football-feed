@@ -18,7 +18,6 @@ class User {
 		// IF USERNAME AND EMAIL ARE VALID STRINGS:
 		// HASH PASSWORD,
 		// INSERT USERNAME, EMAIL, HASHED PASSWORD INTO DB
-		// RETURN USER OBJECT WITH VALUES
 		try {
 			if (validator.isEmail(email) & validator.isAlphanumeric(username)) {
 				const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -29,8 +28,7 @@ class User {
 					[username, email, hashedPassword]
 				);
 				const data = insert.rows[0];
-				const user = new User(data.username, data.email, data.id);
-				return user;
+				return data;
 			} else {
 				throw new ExpressError("Invalid username or password");
 			}
@@ -45,7 +43,6 @@ class User {
 		// COMPARE INPUT PASSWORD WITH SAVED PASSWORD;
 		// IF PASSWORDS MATCH:
 		// RETURN USER OBJECT WITH EMAIL, USERNAME, ID.
-		const userArr = [];
 		try {
 			const query = await db.query(
 				`SELECT id, email, username, password
@@ -58,7 +55,7 @@ class User {
 				const compare = await bcrypt.compare(password, userData.password);
 				if (compare) {
 					const user = new User(userData.username, userData.email, userData.id);
-					userArr.push(user);
+					return user
 				} else {
 					throw new ExpressError("Invalid password", 400);
 				}
@@ -68,20 +65,14 @@ class User {
 		} catch (e) {
 			console.log(e);
 		}
-		return userArr[0];
 	}
 
-	async init() {
-		try {
-			if (this.loginUser()) {
-				this.dbGetUserLeagues;
-				this.dbGetUserTeams;
-			} else {
-				return "login failed";
-			}
-		} catch (e) {
-			next(e);
-		}
+	static async init(email, password) {
+		// RETURN NEW USER OBJECT
+		const login = await User.login(email, password).then(email => {
+			const user = new User(email, login.username, login.id);
+			return user
+		})
 	}
 
 	async dbAddUserLeague(leagueID) {

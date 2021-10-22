@@ -5,13 +5,26 @@ const axios = require("axios").default;
 const Country = require("./country");
 
 class League {
-	// CREATE LEAGUE OBJECT WITH ID FROM API FOOTBALL
+	/************************************************
+	 * STATIC METHODS:
+	 * .dbGetLeague(apiFootballID)
+	 * .apiGetAllLeagues()
+	 * .dbGetAllLeagues()
+	 * 
+	 * INSTANCE METHODS:
+	 * .init()
+	 * .apiGetLeagueData()
+	 * .dbInsertLeagueData()
+	 * .dbGetLeaguesByTypeInCountry()
+	 ************************************************/
+
 	constructor(apiFootballID) {
+		// CREATE LEAGUE OBJECT WITH ID FROM API FOOTBALL
 		this.apiFootballID = apiFootballID;
 	}
 
 	async init() {
-		// CALL .init() ON A LEAGUE OBJ WITH API ID TO SET LEAGUE INFO
+		// CALL .init() ON A LEAGUE INSTANCE WITH API ID TO SET LEAGUE INFO
 		const data = await League.dbGetLeague(this.apiFootballID);
 		this.name = data.name;
 		this.countryName = data.country_name;

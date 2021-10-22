@@ -4,18 +4,16 @@ const headers = require("../headers/api-football");
 const season = require("../season/season");
 
 class Team {
+	/************************************************
+	 * STATIC METHODS:
+	 * .dbGetTeam(apiFootballID)
+	 * 
+	 * INSTANCE METHODS:
+	 * .init()
+	 * .dbInsertTeam()
+	 ************************************************/
 	constructor(apiFootballID) {
 		this.apiFootballID = apiFootballID;
-	}
-
-	async init() {
-		const data = await Team.dbGetTeam(this.apiFootballID);
-		this.name = data.name;
-		this.logo = data.logo;
-		this.country = data.country;
-		this.city = data.city;
-		this.founded = data.founded;
-		this.national = data.national;
 	}
 
 	static async dbGetTeam(apiFootballID) {
@@ -31,6 +29,16 @@ class Team {
 		} catch (e) {
 			next(e);
 		}
+	}
+
+	async init() {
+		const data = await Team.dbGetTeam(this.apiFootballID);
+		this.name = data.name;
+		this.logo = data.logo;
+		this.country = data.country;
+		this.city = data.city;
+		this.founded = data.founded;
+		this.national = data.national;
 	}
 
 	async dbInsertTeam() {

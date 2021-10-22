@@ -8,29 +8,61 @@ const { query } = require("express");
 const validator = require("validator");
 
 class User {
+	/************************************************
+	 * STATIC METHODS:
+	 * .register(username,email,password)
+	 * .login(email,password)
+	 * .getUserByUsername(username)
+	 * .getUserByEmail(email)
+	 * .getUserByID(id)
+	 * 
+	 * INSTANCE METHODS:
+	 * .dbGetUserLeagues()
+	 * .dbAddUserLeague(leagueID)
+	 * .dbRemoveUserLeagues(leagueID)
+	 * .dbGetUserTeams()
+	 * .dbAddUserTeam(teamID)
+	 * .dbRemoveUserTeam(teamID)
+	 ************************************************/
+
 	constructor(username, email, id) {
 		this.username = username;
 		this.email = email;
 		this.id = id;
 	}
 
+	/************************************************
+	 * REGISTER USER
+	 * LOG IN USER
+	 ************************************************/
+
 	static async register(username, email, password) {
 		// IF USERNAME AND EMAIL ARE VALID STRINGS:
 		// HASH PASSWORD,
 		// INSERT USERNAME, EMAIL, HASHED PASSWORD INTO DB
 		try {
-			if (validator.isEmail(email) & validator.isAlphanumeric(username)) {
+			if (!validator.isEmail(email)) {
+				throw new ExpressError("Invalid email address");
+			} else if (!validator.isAlphanumeric(username)) {
+				throw new ExpressError("Username must be alphanumeric.");
+			} else if (!validator.isAlphanumeric(password)) {
+				throw new ExpressError("Password must be alphanumeric.");
+			} else {
 				const hashedPassword = await bcrypt.hash(password, saltRounds);
-				const insert = await db.query(
-					`INSERT INTO users (username, email, password)
+				try {
+					const insert = await db.query(
+						`INSERT INTO users (username, email, password)
 					VALUES ($1,$2,$3)
 					RETURNING username, email, id`,
-					[username, email, hashedPassword]
-				);
-				const data = insert.rows[0];
-				return data;
-			} else {
-				throw new ExpressError("Invalid username or password");
+						[username, email, hashedPassword]
+					);
+					const data = await insert.rows[0];
+					return data;
+				} catch (e) {
+					throw new ExpressError(
+						"An account is already associated with username/email"
+					);
+				}
 			}
 		} catch (e) {
 			console.log(e);
@@ -55,7 +87,7 @@ class User {
 				const compare = await bcrypt.compare(password, userData.password);
 				if (compare) {
 					const user = new User(userData.username, userData.email, userData.id);
-					return user
+					return user;
 				} else {
 					throw new ExpressError("Invalid password", 400);
 				}
@@ -67,12 +99,73 @@ class User {
 		}
 	}
 
-	static async init(email, password) {
-		// RETURN NEW USER OBJECT
-		const login = await User.login(email, password).then(email => {
-			const user = new User(email, login.username, login.id);
-			return user
-		})
+	/************************************************
+	 * GET USER BY EMAIL, USERNAME, OR ID
+	 ************************************************/
+
+	static async getUserByUsername(username) {
+		// SEARCH FOR USER WITH USERNAME
+		const query = await db.query(
+			`SELECT * FROM users
+			WHERE username = $1`,
+			[username]
+		);
+		const user = query.rows[0];
+		return user;
+	}
+
+	static async getUserByEmail(email) {
+		// SEARCH FOR USER WITH USERNAME
+		const query = await db.query(
+			`SELECT * FROM users
+			WHERE email = $1`,
+			[email]
+		);
+		const user = query.rows[0];
+		return user;
+	}
+
+	static async getUserByID(id) {
+		// SEARCH FOR USER WITH USERNAME
+		const query = await db.query(
+			`SELECT * FROM users
+			WHERE id = $1`,
+			[id]
+		);
+		const user = query.rows[0];
+		return user;
+	}
+
+	/************************************************
+	 * USER LEAGUE METHODS
+	 * GET LEAGUES
+	 * ADD LEAGUES
+	 * REMOVE LEAGUES
+	 ************************************************/
+
+	async dbGetUserLeagues() {
+		// QUERY USERS_LEAGUES WITH USER ID
+		const leaguesArray = [];
+		const getLeagueIDs = await db.query(
+			`SELECT league_id
+			FROM users_leagues
+			WHERE user_id = $1`,
+			[this.id]
+		);
+		const leagueIDs = getLeagueIDs.rows;
+		for (let i = 0; i < leagueIDs.length; i++) {
+			const leagueID = leagueIDs[i].league_id;
+			const leagueQuery = await db.query(
+				`SELECT api_football_id, name, country_name, type, logo, country_code
+				FROM leagues
+				WHERE api_football_id = $1`,
+				[leagueID]
+			);
+			const league = leagueQuery.rows[0];
+			leaguesArray.push(league);
+		}
+		this.leagues = leaguesArray;
+		return leaguesArray;
 	}
 
 	async dbAddUserLeague(leagueID) {
@@ -100,6 +193,39 @@ class User {
 		}
 	}
 
+	/************************************************
+	 * USER TEAM METHODS
+	 * GET TEAMS
+	 * ADD TEAMS
+	 * REMOVE TEAMS
+	 ************************************************/
+
+	async dbGetUserTeams() {
+		const teamsArray = [];
+		const getTeamIDs = await db.query(
+			`SELECT team_id
+			FROM users_teams
+			WHERE user_id = $1`,
+			[this.id]
+		);
+		const teamIDs = getTeamIDs.rows;
+		console.log("teamIDs: ", teamIDs);
+		for (let i = 0; i < teamIDs.length; i++) {
+			const teamID = teamIDs[i].team_id;
+			console.log("teamID", teamID);
+			const teamQuery = await db.query(
+				`SELECT api_football_id, name, country, founded, national, logo, city
+				FROM teams
+				WHERE api_football_id = $1`,
+				[teamID]
+			);
+			const team = teamQuery.rows[0];
+			teamsArray.push(team);
+		}
+		this.teams = teamsArray;
+		return teamsArray;
+	}
+
 	async dbAddUserTeam(teamID) {
 		try {
 			const insert = await db.query(
@@ -124,52 +250,6 @@ class User {
 		} catch (e) {
 			next(e);
 		}
-	}
-
-	async dbGetUserLeagues() {
-		// QUERY USERS_LEAGUES WITH USER ID
-		const leaguesArray = [];
-		const getLeagueIDs = await db.query(
-			`SELECT league_id
-			FROM users_leagues
-			WHERE user_id = $1`,
-			[this.id]
-		);
-		const leagueIDs = getLeagueIDs.rows;
-		for (let i = 0; i < leagueIDs.length; i++) {
-			const leagueID = leagueIDs[i];
-			const leagueQuery = await db.query(
-				`SELECT api_football_id, name, country_name, type, logo, country_code
-				FROM leagues WHERE api_football_id = $1`,
-				[leagueID]
-			);
-			const league = leagueQuery.rows[0];
-			leaguesArray.push(league);
-		}
-		this.leagues = leaguesArray;
-	}
-
-	async dbGetUserTeams() {
-		const teamsArray = [];
-		const getTeamIDs = await db.query(
-			`SELECT team_id
-			FROM users_teams
-			WHERE user_id = $1`,
-			[this.id]
-		);
-		const teamIDs = getTeamIDs.rows;
-		for (let i = 0; i < teamIDs.length; i++) {
-			const teamID = teamIDs[i];
-			const teamQuery = await db.query(
-				`SELECT api_football_id, name, country, founded, national, logo, city
-				FROM teams
-				WHERE api_football_id = $1`,
-				[teamID]
-			);
-			const team = teamQuery.rows[0];
-			teamsArray.push(team);
-		}
-		this.teams = teamsArray;
 	}
 }
 

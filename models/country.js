@@ -13,13 +13,44 @@ class Country {
 	 * .dbInsertCountryData()
 	 * .apiGetLeaguesInCountry()
 	 * .apiGetTeamsInCountry()
-	 * 
+	 * .dbGetAllNationalTeams()
+	 * .dbGetAllLeagues()
 	 ************************************************/
 
 	constructor(code, name, flag) {
 		this.code = code || "WF";
 		this.name = name;
 		this.flag = flag || "N/A";
+	}
+
+	static async dbGetCountryByCode(code) {
+		try {
+			const query = await db.query(
+				`SELECT id, name, code, flag
+				FROM countries
+				WHERE code = $1`, [code]
+			);
+			const data = query.rows[0];
+			const country = new Country(data.code, data.name, data.flag)
+			return country
+		} catch (e) {
+			console.log(e)
+		}
+	}
+
+	static async dbGetCountryByName(name) {
+		try {
+			const query = await db.query(
+				`SELECT id, name, code, flag
+				FROM countries
+				WHERE name = $1`, [name]
+			);
+			const data = query.rows[0];
+			const country = new Country(data.code, data.name, data.flag)
+			return country
+		} catch (e) {
+			console.log(e)
+		}
 	}
 
 	// GET ALL COUNTRIES IN DATABASE
@@ -125,12 +156,26 @@ class Country {
 		}
 	}
 
-	async dbSetLeaguesInCountry() {
-		// INSERT ROWS INTO COUNTRIES_LEAGUES
+	async dbGetLeaguesInCountry() {
+		try {
+			const query = await db.query(
+				`SELECT api_football_id, name, country_name, type, logo, country_code
+				FROM leagues
+				WHERE country_code = $1`, [this.code]
+			);
+			const data = query.rows;
+			this.leagues = data;
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
-	async apiGetNationalTeam() {
-		// CALL API FOR INFO ON COUNTRIES NATIONAL TEAMS
+	async apiGetNationalTeams() {
+		try {
+			
+		} catch (e) {
+			console.log(e);
+		}
 	}
 }
 

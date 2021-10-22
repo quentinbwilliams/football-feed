@@ -6,7 +6,7 @@ const season = require("../season/season");
 class Team {
 	/************************************************
 	 * STATIC METHODS:
-	 * .dbGetTeam(apiFootballID)
+	 * .dbGetTeamByID(apiFootballID)
 	 *
 	 * INSTANCE METHODS:
 	 * .init()
@@ -20,7 +20,7 @@ class Team {
 		this.apiFootballID = apiFootballID;
 	}
 
-	static async dbGetTeam(apiFootballID) {
+	static async dbGetTeamByID(apiFootballID) {
 		try {
 			const query = await db.query(
 				`SELECT api_football_id, name, country, founded, national, logo, city

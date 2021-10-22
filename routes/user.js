@@ -12,15 +12,12 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
 	try {
 		const { id } = req.params;
-		console.log('id: ', id)
 		const getUser = await User.getUserByID(id);
 		const user = new User(getUser.username, getUser.email, getUser.id);
-		const leagues = await user.dbGetUserLeagueIDs();
-		// const teams = await user.dbGetUserTeams();
-		console.log('LEAGUES: ', leagues)
-		// console.log('TEAMS: ', teams)
-		console.log('USER: ', user)
-		// return res.send([user, teams]);
+		const leagues = await user.dbGetUserLeagues();
+		const teams = await user.dbGetUserTeams();
+		console.log("USER: ", user);
+		return res.send([user, teams]);
 	} catch (err) {
 		return next(err);
 	}
@@ -28,41 +25,37 @@ router.get("/:id", async (req, res, next) => {
 
 // GET user leagues
 router.get("/:id/leagues", async (req, res, next) => {
-	const { id } = req.params;
-	const user = await User.getUserByID(id);
-	await user.dbGetUserLeagues();
-	return res.send(user);
+	try {
+		const { id } = req.params;
+		const getUser = await User.getUserByID(id);
+		const user = new User(getUser.username, getUser.email, getUser.id);
+		await user.dbGetUserLeagues();
+		return res.send(user);
+	} catch (e) {
+		return next(e);
+	}
 });
 
 // GET user teams
-router.get("/:id", async (req, res, next) => {
-	const { id } = req.params;
+router.get("/:id/teams", async (req, res, next) => {
 	try {
-		const usersTeams = await db.query(
-			`SELECT * FROM users
-			JOIN users_teams AS ut
-			ON users.id = ut.user_id 
-			JOIN teams as t
-			ON ut.team_id = t.id
-			WHERE users.id=$1`,
-			[id]
-		);
-		const teams = usersTeams.rows;
-		return teams;
+		const { id } = req.params;
+		const getUser = await User.getUserByID(id);
+		const user = new User(getUser.username, getUser.email, getUser.id);
+		await user.dbGetUserTeams();
+		return res.send(user);
 	} catch (e) {
 		return next(e);
 	}
 });
 
 // UPDATE user leagues
-router.patch("/:id/league/:league_id", async (req, res, next) => {
-	const { id, league_id } = req.params;
+router.patch("/:id/league/:leagueID", async (req, res, next) => {
+	const { id, leagueID } = req.params;
 	try {
-		const updateUserLeague = await db.query(
-			`INSERT INTO users_leagues(user_id, league_id)
-			VALUES ($1,$2) RETURNING user_id, league_id`,
-			[id, league_id]
-		);
+		const getUser = await User.getUserByID(id);
+		const user = new User(getUser.username, getUser.email, getUser.id);
+		await user.dbAddUserLeague(leagueID);
 	} catch (e) {
 		return next(e);
 	}

@@ -7,10 +7,14 @@ class Team {
 	/************************************************
 	 * STATIC METHODS:
 	 * .dbGetTeam(apiFootballID)
-	 * 
+	 *
 	 * INSTANCE METHODS:
 	 * .init()
 	 * .dbInsertTeam()
+	 * .apiGetAllMatches()
+	 * .apiGetLiveMatches()
+	 * .apiGetInjuryList()
+	 * .apiGetSquadStats()
 	 ************************************************/
 	constructor(apiFootballID) {
 		this.apiFootballID = apiFootballID;
@@ -56,6 +60,86 @@ class Team {
 					this.city,
 				]
 			);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async apiGetAllMatches() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					team: this.apiFootballID,
+					season: season,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/fixtures",
+				options
+			);
+			const data = request.data.response;
+			this.allMatches = data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async apiGetLiveMatches() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					team: this.apiFootballID,
+					live: "all",
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/fixtures",
+				options
+			);
+			const data = request.data.response;
+			this.liveMatches = data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async apiGetInjuryList() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					season: season,
+					team: this.apiFootballID,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/injuries",
+				options
+			);
+			const data = request.data.response;
+			this.injuryList = data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async apiGetSquadStats() {
+		// MAY RETURN OUTDATED INFO
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					team: this.apiFootballID,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/players/squads",
+				options
+			);
+			const data = request.data.response[0].players;
+			this.squadStats = data;
 		} catch (e) {
 			console.log(e);
 		}

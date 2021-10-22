@@ -3,6 +3,7 @@ const season = require("../season/season");
 const headers = require("../headers/api-football");
 const axios = require("axios").default;
 const Country = require("./country");
+const { head } = require("../routes/user");
 
 class League {
 	/************************************************
@@ -10,12 +11,20 @@ class League {
 	 * .dbGetLeague(apiFootballID)
 	 * .apiGetAllLeagues()
 	 * .dbGetAllLeagues()
-	 * 
+	 *
 	 * INSTANCE METHODS:
 	 * .init()
 	 * .apiGetLeagueData()
 	 * .dbInsertLeagueData()
 	 * .dbGetLeaguesByTypeInCountry()
+	 * .apiGetAllMatches()
+	 * .apiGetCurrentRound()
+	 * .apiGetLiveMatches()
+	 * .apiGetTopGoals()
+	 * .apiGetTopAssists()
+	 * .apiGetTopRedCards()
+	 * .apiGetTopYellowCards()
+	 * .apiGetStandings()
 	 ************************************************/
 
 	constructor(apiFootballID) {
@@ -146,20 +155,165 @@ class League {
 		return res.rows;
 	}
 
-	async apiGetLiveMatches(leagueID) {
-		// CALL API FOOTBALL LIVE MATCHES, OTHERWISE RETURN FALSE
+	async apiGetAllMatches() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					league: this.apiFootballID,
+					season: season,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/fixtures",
+				options
+			);
+			const data = request.data.response;
+			this.allMatches = data;
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
-	async getMatchweek(leagueID) {
-		// CALL API FOOTBALL AND RETURN THE MATCH SCHEDULE FOR THE UPCOMING MATCHWEEK
+	async apiGetCurrentRound() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					league: this.apiFootballID,
+					season: season,
+					current: true,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/fixtures/rounds",
+				options
+			);
+			const data = request.data.response;
+			this.currentRound = data;
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
-	async getScorers(leagueID) {
-		// CALL API FOOTBALL AND RETURN THE TOP SCORERS FOR THE LEAGUE
+	async apiGetLiveMatches() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					league: this.apiFootballID,
+					live: "all",
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/fixtures",
+				options
+			);
+			const data = request.data.response;
+			this.liveMatches = data;
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
-	async getCompletedMatches(leagueID) {
-		// CALL FOOTBALL API RETURN THE MATCHES THAT HAVE BEEN PLAYED SO FAR IN THE SEASON
+	async apiGetTopGoals() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					league: this.apiFootballID,
+					season: season,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/players/topscorers",
+				options
+			);
+			const data = request.data.response;
+			this.topGoals = data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async apiGetTopAssists() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					league: this.apiFootballID,
+					season: season,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/players/topassists",
+				options
+			);
+			const data = request.data.response;
+			this.topAssists = data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async apiGetTopRedCards() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					league: this.apiFootballID,
+					season: season,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/players/topredcards",
+				options
+			);
+			const data = request.data.response;
+			this.topRedCards = data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async apiGetTopYellowCards() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					league: this.apiFootballID,
+					season: season,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/players/topassists",
+				options
+			);
+			const data = request.data.response;
+			this.topYellowCards = data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async apiGetStandings() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					season: season,
+					league: this.apiFootballID,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/players/topassists",
+				options
+			);
+			const data = request.data.response.standings;
+			this.standings = data;
+		} catch (e) {
+			console.log(e);
+		}
 	}
 }
 

@@ -3,6 +3,19 @@ const db = require("../db/db");
 const headers = require("../headers/api-football");
 
 class Country {
+	/************************************************
+	 * STATIC METHODS:
+	 * .dbGetCountries()
+	 * .apiGetAllCountries()
+	 * 
+	 * INSTANCE METHODS:
+	 * .apiGetCountryData()
+	 * .dbInsertCountryData()
+	 * .apiGetLeaguesInCountry()
+	 * .apiGetTeamsInCountry()
+	 * 
+	 ************************************************/
+
 	constructor(code, name, flag) {
 		this.code = code || "WF";
 		this.name = name;

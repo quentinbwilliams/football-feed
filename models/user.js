@@ -15,7 +15,7 @@ class User {
 	 * .getUserByUsername(username)
 	 * .getUserByEmail(email)
 	 * .getUserByID(id)
-	 * 
+	 *
 	 * INSTANCE METHODS:
 	 * .dbGetUserLeagues()
 	 * .dbAddUserLeague(leagueID)
@@ -170,11 +170,19 @@ class User {
 
 	async dbAddUserLeague(leagueID) {
 		try {
-			const insert = await db.query(
-				`INSERT INTO users_leagues (user_id, league_id)
-			VALUES ($1,$2)`,
-				[this.id, leagueID]
+			const userLeagues = await this.dbGetUserLeagues();
+			let findLeague = userLeagues.find(
+				(obj) => obj.api_football_id == leagueID
 			);
+			if (findLeague) {
+				throw new ExpressError("You already follow this league");
+			} else {
+				const insert = await db.query(
+					`INSERT INTO users_leagues (user_id, league_id)
+					VALUES ($1,$2)`,
+					[this.id, leagueID]
+				);
+			}
 		} catch (e) {
 			next(e);
 		}
@@ -228,12 +236,20 @@ class User {
 
 	async dbAddUserTeam(teamID) {
 		try {
-			const insert = await db.query(
-				`INSERT INTO users_teams (user_id, team_id)
-			VALUES ($1, $2)`,
-				[this.id, teamID]
-			);
-			return insert.rows[0];
+			const userTeams = await this.dbGetUserTeams();
+			console.log;
+			let findTeam = userTeams.find((obj) => obj.api_football_id == teamID);
+			console.log(userTeams)
+			if (findTeam) {
+				throw new ExpressError("You already follow this team");
+			} else {
+				const insert = await db.query(
+					`INSERT INTO users_teams (user_id, team_id)
+					VALUES ($1, $2)`,
+					[this.id, teamID]
+				);
+				return insert.rows[0];
+			}
 		} catch (e) {
 			next(e);
 		}
@@ -243,12 +259,13 @@ class User {
 		try {
 			const remove = await db.query(
 				`DELETE FROM users_teams
-				WHERE user_id = $1 AND team_id = $2`,
+				WHERE user_id = $1 AND team_id = $2
+				RETURNING user_id, team_id`,
 				[this.id, teamID]
 			);
 			return remove.rows[0];
 		} catch (e) {
-			next(e);
+			console.log(e)
 		}
 	}
 }

@@ -36,7 +36,7 @@ class Team {
 	}
 
 	async init() {
-		const data = await Team.dbGetTeam(this.apiFootballID);
+		const data = await Team.dbGetTeamByID(this.apiFootballID);
 		this.name = data.name;
 		this.logo = data.logo;
 		this.country = data.country;

@@ -18,24 +18,70 @@ router.get("/", async (req, res, next) => {
 router.get("/:code", async (req, res, next) => {
 	try {
 		const { code } = req.params;
-		const country = await Country.dbGetCountryByCode(code);
-		country.apiGetCountryData();
+		const codeUpperCased = code.toUpperCase();
+		const countryData = await Country.dbGetCountryByCode(codeUpperCased);
+		const country = new Country(
+			countryData.code,
+			countryData.name,
+			countryData.flag
+		);
 		res.send(country);
 	} catch (e) {
-		return next(e)
+		return next(e);
 	}
-})
+});
 
 // GET LEAGUES IN COUNTRY
 router.get("/:code/leagues", async (req, res, next) => {
 	try {
 		const { code } = req.params;
-		const country = new Country.dbGetCountryByCode(code);
-		const dbRequestCountryLeagues = await country.dbGetLeaguesInCountry();
+		const codeUpperCased = code.toUpperCase();
+		const countryData = await Country.dbGetCountryByCode(codeUpperCased);
+		const country = new Country(
+			countryData.code,
+			countryData.name,
+			countryData.flag
+		);
+		const getLeagues = await country.dbGetAllLeagues();
 		return res.send(country);
 	} catch (e) {
-		return next (e)
+		return next(e);
 	}
-})
+});
+
+// GET TEAMS IN COUNTRY
+router.get("/:code/teams", async (req, res, next) => {
+	try {
+		const { code } = req.params;
+		const codeUpperCased = code.toUpperCase();
+		const countryData = await Country.dbGetCountryByCode(codeUpperCased);
+		const country = new Country(
+			countryData.code,
+			countryData.name,
+			countryData.flag
+		);
+		const getTeams = await country.dbGetAllTeams();
+		return res.send(country);
+	} catch (e) {
+		return next(e);
+	}
+});
+
+router.get("/:code/national", async (req, res, next) => {
+	try {
+		const { code } = req.params;
+		const codeUpperCased = code.toUpperCase();
+		const countryData = await Country.dbGetCountryByCode(codeUpperCased);
+		const country = new Country(
+			countryData.code,
+			countryData.name,
+			countryData.flag
+		);
+		const getTeams = await country.dbGetAllNationalTeams();
+		return res.send(country);
+	} catch (e) {
+		return next(e);
+	}
+});
 
 module.exports = router;

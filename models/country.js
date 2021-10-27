@@ -1,14 +1,14 @@
 const axios = require("axios").default;
 const db = require("../db/db");
 const headers = require("../headers/api-football");
-const ExpressError = require("../error")
+const ExpressError = require("../error");
 
 class Country {
 	/************************************************
 	 * STATIC METHODS:
 	 * .dbGetCountries()
 	 * .apiGetAllCountries()
-	 * 
+	 *
 	 * INSTANCE METHODS:
 	 * .apiGetCountryData()
 	 * .dbInsertCountryData()
@@ -29,13 +29,14 @@ class Country {
 			const query = await db.query(
 				`SELECT id, name, code, flag
 				FROM countries
-				WHERE code = $1`, [code]
+				WHERE code = $1`,
+				[code]
 			);
 			const data = query.rows[0];
-			const country = new Country(data.code, data.name, data.flag)
-			return country
+			const country = new Country(data.code, data.name, data.flag);
+			return country;
 		} catch (e) {
-			return new ExpressError("Unable to get country data with code")
+			return new ExpressError("Unable to get country data with code");
 		}
 	}
 
@@ -44,13 +45,14 @@ class Country {
 			const query = await db.query(
 				`SELECT id, name, code, flag
 				FROM countries
-				WHERE name = $1`, [name]
+				WHERE name = $1`,
+				[name]
 			);
 			const data = query.rows[0];
-			const country = new Country(data.code, data.name, data.flag)
-			return country
+			const country = new Country(data.code, data.name, data.flag);
+			return country;
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 	}
 
@@ -157,31 +159,51 @@ class Country {
 		}
 	}
 
-	async dbGetLeaguesInCountry() {
+	async dbGetAllLeagues() {
 		try {
 			const query = await db.query(
 				`SELECT api_football_id, name, country_name, type, logo, country_code
 				FROM leagues
-				WHERE country_code = $1`, [this.code]
+				WHERE country_code = $1`,
+				[this.code]
 			);
 			const data = query.rows;
 			this.leagues = data;
+			return data;
 		} catch (e) {
-			return new ExpressError("Unable to find leagues in country")
+			return new ExpressError("Unable to find leagues in country");
 		}
 	}
 
-	async apiGetNationalTeams() {
+	async dbGetAllNationalTeams() {
 		try {
 			const query = await db.query(
 				`SELECT api_football_id, name, country, founded, national, logo, city
 				FROM teams
-				WHERE national = t AND country = $1`, [this.name]
-			)
+				WHERE national = true AND country = $1`,
+				[this.name]
+			);
+			const data = query.rows;
+			this.teams = data;
+			return data;
+		} catch (e) {
+			return new ExpressError("Unable to find teams for country");
+		}
+	}
+
+	async dbGetAllTeams() {
+		try {
+			const query = await db.query(
+				`SELECT api_football_id, name, country, founded, national, logo, city
+				FROM teams
+				WHERE country = $1`,
+				[this.name]
+			);
 			const data = query.rows;
 			this.nationalTeams = data;
+			return data;
 		} catch (e) {
-			return new ExpressError("Unable to find national teams for country")
+			return new ExpressError("Unable to find teams for country");
 		}
 	}
 }

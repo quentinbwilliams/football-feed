@@ -20,7 +20,6 @@ const COUNTRIES = [
   `Poland`,
   `Senegal`,
   `Sweden`,
-  `United States`,
   `USA`,
   `Austria`,
   `Ukraine`,

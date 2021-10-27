@@ -33,6 +33,7 @@ class League {
 		this.apiFootballID = apiFootballID;
 	}
 
+	// INIT FUNCTION CALLS dgGetLeague() with league id.
 	async init() {
 		// CALL .init() ON A LEAGUE INSTANCE WITH API ID TO SET LEAGUE INFO
 		const data = await League.dbGetLeague(this.apiFootballID);

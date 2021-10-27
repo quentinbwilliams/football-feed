@@ -20,7 +20,8 @@ CREATE TABLE users
 	username TEXT UNIQUE NOT NULL,
 	email UNIQUE VARCHAR(320),
 	password TEXT NOT NULL,
-	admin BOOLEAN DEFAULT FALSE
+	admin BOOLEAN DEFAULT FALSE,
+	created CURRENT_DATE
 );
 
 CREATE TABLE countries
@@ -28,7 +29,8 @@ CREATE TABLE countries
 	id SERIAL PRIMARY KEY,
 	name TEXT UNIQUE NOT NULL,
 	code TEXT NOT NULL,
-	flag TEXT NOT NULL
+	flag TEXT NOT NULL,
+	created CURRENT_DATE
 );
 
 CREATE TABLE leagues
@@ -38,7 +40,8 @@ CREATE TABLE leagues
 	country_name TEXT,
 	type TEXT NOT NULL,
 	logo TEXT,
-	country_code TEXT
+	country_code TEXT,
+	created CURRENT_DATE
 );
 
 CREATE TABLE teams
@@ -49,7 +52,8 @@ CREATE TABLE teams
 	founded INTEGER,
 	national BOOLEAN,
 	logo TEXT NOT NULL,
-	city TEXT
+	city TEXT,
+	created CURRENT_DATE
 );
 
 CREATE TABLE players
@@ -57,7 +61,8 @@ CREATE TABLE players
 	api_football_id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
 	photo TEXT,
-	nationality TEXT
+	nationality TEXT,
+	created CURRENT_DATE
 );
 
 CREATE TABLE coaches
@@ -65,54 +70,84 @@ CREATE TABLE coaches
 	api_football_id INTEGER PRIMARY KEY,
 	name TEXT NOT NULL,
 	photo TEXT,
-	nationality TEXT
+	nationality TEXT,
+	created CURRENT_DATE
 );
+
+CREATE TABLE matches
+(
+	api_football_id INTEGER PRIMARY KEY,
+	league TEXT NOT NULL,
+	league_id INTEGER NOT NULL,
+	round TEXT NOT NULL,
+	date TEXT,
+	home TEXT NOT NULL,
+	home_id INTEGER NOT NULL,
+	away TEXT NOT NULL,
+	away_id INTEGER NOT NULL,
+	ht_home INTEGER,
+	ht_away INTEGER,
+	ft_home INTEGER,
+	ft_away INTEGER,
+	et_home INTEGER,
+	et_away INTEGER,
+	pen_home INTEGER,
+	pen_away INTEGER,
+	created CURRENT_DATE
+)
 
 CREATE TABLE IF NOT EXISTS users_countries
 (	
 	id SERIAL PRIMARY KEY,
 	user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
-	country_id INTEGER REFERENCES countries (id) ON DELETE CASCADE
+	country_id INTEGER REFERENCES countries (id) ON DELETE CASCADE,
+	created CURRENT_DATE
 );
 
 CREATE TABLE IF NOT EXISTS users_leagues
 (
 	id SERIAL PRIMARY KEY,
 	user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
-	league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE
+	league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE,
+	created CURRENT_DATE
 );
 
 CREATE TABLE IF NOT EXISTS users_teams
 (
 	id SERIAL PRIMARY KEY,
 	user_id INTEGER REFERENCES users (id) ON DELETE CASCADE,
-	team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE
+	team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE,
+	created CURRENT_DATE
 );
 
 CREATE TABLE countries_leagues
 (
 	id SERIAL PRIMARY KEY,
 	country_id INTEGER REFERENCES countries (id) ON DELETE CASCADE,
-	league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE
+	league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE,
+	created CURRENT_DATE
 );
 
 CREATE TABLE leagues_teams
 (
 	id SERIAL PRIMARY KEY,
 	league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE,
-	team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE
+	team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE,
+	created CURRENT_DATE
 );
 
 CREATE TABlE teams_players
 (
 	id SERIAL PRIMARY KEY,
 	team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE,
-	player_id INTEGER REFERENCES players (api_football_id) ON DELETE CASCADE
+	player_id INTEGER REFERENCES players (api_football_id) ON DELETE CASCADE,
+	created CURRENT_DATE
 );
 
 CREATE TABLE teams_coaches
 (
 	id SERIAL PRIMARY KEY,
 	team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE,
-	coach_id INTEGER REFERENCES coaches (api_football_id) ON DELETE CASCADE
+	coach_id INTEGER REFERENCES coaches (api_football_id) ON DELETE CASCADE,
+	created CURRENT_DATE
 );

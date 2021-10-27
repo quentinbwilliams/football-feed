@@ -18,11 +18,23 @@ router.get("/", async (req, res, next) => {
 router.get("/:code", async (req, res, next) => {
 	try {
 		const { code } = req.params;
-		const country = new Country(code)
+		const country = await Country.dbGetCountryByCode(code);
 		country.apiGetCountryData();
 		res.send(country);
 	} catch (e) {
-		next(e)
+		return next(e)
+	}
+})
+
+// GET LEAGUES IN COUNTRY
+router.get("/:code/leagues", async (req, res, next) => {
+	try {
+		const { code } = req.params;
+		const country = new Country.dbGetCountryByCode(code);
+		const dbRequestCountryLeagues = await country.dbGetLeaguesInCountry();
+		return res.send(country);
+	} catch (e) {
+		return next (e)
 	}
 })
 

@@ -4,6 +4,7 @@ const headers = require("../headers/api-football");
 const axios = require("axios").default;
 const Country = require("./country");
 const { head } = require("../routes/user");
+const ExpressError = require("../error");
 
 class League {
 	/************************************************
@@ -76,11 +77,15 @@ class League {
 
 	static async dbGetAllLeagues() {
 		// RETURNS ALL LEAGUES IN DB
-		const res = await db.query(
-			`SELECT name, api_football_id, type, country_code
-			FROM leagues;`
-		);
-		return res.rows;
+		try {
+			const res = await db.query(
+				`SELECT name, api_football_id, type, country_code
+				FROM leagues;`
+			);
+			return res.rows;
+		} catch (e) {
+			return new ExpressError("Unable to get all leagues from database");
+		}
 	}
 
 	async apiGetLeagueData() {
@@ -111,7 +116,7 @@ class League {
 				this.teams = standings;
 			}
 		} catch (e) {
-			console.log("error", e);
+			return new ExpressError("Unable to get league data from api");
 		}
 	}
 
@@ -138,21 +143,25 @@ class League {
 					]
 				);
 			} catch (e) {
-				console.log("error", e);
+				return new ExpressError("Unable to insert league data");
 			}
 		}
 	}
 
 	async dbGetLeaguesByTypeInCountry() {
 		// RETURNS ALL LEAGUES OF A SPECIFIC TYPE IN A CERTAIN COUNTRY
-		const res = await db.query(
-			`SELECT name, api_football_id, type, country_code
-			FROM leauges
-			WHERE country_name = $1
-			AND type = $2`,
-			[this.country, this.type]
-		);
-		return res.rows;
+		try {
+			const res = await db.query(
+				`SELECT name, api_football_id, type, country_code
+				FROM leauges
+				WHERE country_name = $1
+				AND type = $2`,
+				[this.country, this.type]
+			);
+			return res.rows;
+		} catch (e) {
+			return new ExpressError("Unable to get leagues by type in country");
+		}
 	}
 
 	async apiGetAllMatches() {
@@ -171,7 +180,7 @@ class League {
 			const data = request.data.response;
 			this.allMatches = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to get all match data");
 		}
 	}
 
@@ -192,7 +201,7 @@ class League {
 			const data = request.data.response;
 			this.currentRound = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to get current round data");
 		}
 	}
 
@@ -212,7 +221,7 @@ class League {
 			const data = request.data.response;
 			this.liveMatches = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to get live match data");
 		}
 	}
 
@@ -232,7 +241,7 @@ class League {
 			const data = request.data.response;
 			this.topGoals = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to get goals data");
 		}
 	}
 
@@ -252,7 +261,7 @@ class League {
 			const data = request.data.response;
 			this.topAssists = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to get assists data");
 		}
 	}
 
@@ -272,7 +281,7 @@ class League {
 			const data = request.data.response;
 			this.topRedCards = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to get red card data");
 		}
 	}
 
@@ -286,13 +295,13 @@ class League {
 				},
 			};
 			const request = await axios.get(
-				"https://api-football-v1.p.rapidapi.com/v3/players/topassists",
+				"https://api-football-v1.p.rapidapi.com/v3/players/topyellowcards",
 				options
 			);
 			const data = request.data.response;
 			this.topYellowCards = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to get yellow card data");
 		}
 	}
 
@@ -306,13 +315,17 @@ class League {
 				},
 			};
 			const request = await axios.get(
-				"https://api-football-v1.p.rapidapi.com/v3/players/topassists",
+				"https://api-football-v1.p.rapidapi.com/v3/standings",
 				options
 			);
-			const data = request.data.response.standings;
-			this.standings = data;
+			const leagueStandings = request.data.response[0].league.standings;
+			if (this.type === 'League') {
+				this.standings = leagueStandings[0];
+			} else {
+				this.standings = leagueStandings;
+			}
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to get standings data");
 		}
 	}
 }

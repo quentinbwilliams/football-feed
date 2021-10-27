@@ -1,6 +1,7 @@
 const axios = require("axios").default;
 const db = require("../db/db");
 const headers = require("../headers/api-football");
+const ExpressError = require("../error")
 
 class Country {
 	/************************************************
@@ -34,7 +35,7 @@ class Country {
 			const country = new Country(data.code, data.name, data.flag)
 			return country
 		} catch (e) {
-			console.log(e)
+			return new ExpressError("Unable to get country data with code")
 		}
 	}
 
@@ -166,15 +167,21 @@ class Country {
 			const data = query.rows;
 			this.leagues = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to find leagues in country")
 		}
 	}
 
 	async apiGetNationalTeams() {
 		try {
-			
+			const query = await db.query(
+				`SELECT api_football_id, name, country, founded, national, logo, city
+				FROM teams
+				WHERE national = t AND country = $1`, [this.name]
+			)
+			const data = query.rows;
+			this.nationalTeams = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError("Unable to find national teams for country")
 		}
 	}
 }

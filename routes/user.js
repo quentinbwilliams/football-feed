@@ -4,19 +4,30 @@ const ExpressError = require("../error");
 const router = express.Router();
 const User = require("../models/user");
 
-router.get("/", async (req, res, next) => {
-	return res.send("Hello user");
+// LOGIN
+router.post("/login", async (req, res, next) => {
+	const { email, password } = req.body;
+	try {
+		const user = await User.login(email, password);
+		res.send(user);
+	} catch (e) {
+		return new ExpressError("Invalid username or password");
+	}
 });
+
+// LOGOUT
+router.get("/logout", async (req, res, next) => {
+	const
+})
 
 // GET user by id
 router.get("/:id", async (req, res, next) => {
+	const { id } = req.params;
 	try {
-		const { id } = req.params;
 		const getUser = await User.getUserByID(id);
 		const user = new User(getUser.username, getUser.email, getUser.id);
 		const leagues = await user.dbGetUserLeagues();
 		const teams = await user.dbGetUserTeams();
-		console.log("USER: ", user);
 		return res.send([user, teams]);
 	} catch (err) {
 		return next(err);
@@ -25,8 +36,8 @@ router.get("/:id", async (req, res, next) => {
 
 // GET user leagues
 router.get("/:id/leagues", async (req, res, next) => {
-	try {
 		const { id } = req.params;
+	try {
 		const getUser = await User.getUserByID(id);
 		const user = new User(getUser.username, getUser.email, getUser.id);
 		await user.dbGetUserLeagues();
@@ -38,8 +49,8 @@ router.get("/:id/leagues", async (req, res, next) => {
 
 // GET user teams
 router.get("/:id/teams", async (req, res, next) => {
-	try {
 		const { id } = req.params;
+	try {
 		const getUser = await User.getUserByID(id);
 		const user = new User(getUser.username, getUser.email, getUser.id);
 		await user.dbGetUserTeams();
@@ -56,20 +67,20 @@ router.patch("/:id/league/:leagueID", async (req, res, next) => {
 		const getUser = await User.getUserByID(id);
 		const user = new User(getUser.username, getUser.email, getUser.id);
 		await user.dbAddUserLeague(leagueID);
+		return res.send(user);
 	} catch (e) {
 		return next(e);
 	}
 });
 
 // UPDATE user teams
-router.patch("/:id/team/:team_id", async (req, res, next) => {
-	const { id, team_id } = req.params;
+router.patch("/:id/team/:teamID", async (req, res, next) => {
+	const { id, teamID } = req.params;
 	try {
-		const updateUserLeague = await db.query(
-			`INSERT INTO users_teams(user_id, team_id)
-			VALUES ($1,$2) RETURNING user_id, league_id`,
-			[id, team_id]
-		);
+		const getUser = await User.getUserByID(id);
+		const user = new User(getUser.username, getUser.email, getUser.id);
+		await user.dbAddUserTeam(teamID);
+		return res.send(user);
 	} catch (e) {
 		return next(e);
 	}

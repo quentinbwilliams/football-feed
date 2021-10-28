@@ -19,6 +19,7 @@ class League {
 	 * .dbInsertLeagueData()
 	 * .dbGetLeaguesByTypeInCountry()
 	 * .apiGetAllMatches()
+	 * .dbGetAllMatches()
 	 * .apiGetCurrentRound()
 	 * .apiGetLiveMatches()
 	 * .apiGetTopGoals()
@@ -182,6 +183,21 @@ class League {
 			this.allMatches = data;
 		} catch (e) {
 			return new ExpressError("Unable to get all match data");
+		}
+	}
+
+	async dbGetAllMatches() {
+		try {
+			const query = await db.query(
+				`SELECT api_football_id, league, league_id, season, round,date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win, created_at 
+				FROM matches
+				WHERE league_id = $1`, [this.apiFootballID]
+			);
+			const data = query.rows;
+			this.allMatches = data;
+			return data;
+		} catch (e) {
+			return new ExpressError(e)
 		}
 	}
 

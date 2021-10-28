@@ -48,9 +48,8 @@ const LEAGUE_IDS = require("../../leagues-array");
 // World Cup - South America Qualification (WF) - 34
 // THE FOLLOWING ARRAY CONTAINS THE API IDs FOR THOSE LEAGUES
 
-
 (async () => {
-	for (let i = 1; i < LEAGUE_IDS.length; i++) {
+	for (let i = 0; i < LEAGUE_IDS.length; i++) {
 		const leagueObj = new League(LEAGUE_IDS[i]);
 		await leagueObj.init();
 		await leagueObj.apiGetAllMatches();
@@ -77,7 +76,29 @@ const LEAGUE_IDS = require("../../leagues-array");
 			const penAway = matches[j].score.penalty.away;
 			const homeWin = matches[j].teams.home.winner;
 			const awayWin = matches[j].teams.away.winner;
-			const matchObj = new Match(id, league, leagueID, season, round, date, referee, home, homeID, away, awayID, htHome, htAway, ftHome, ftAway, etHome, etAway, penHome, penAway, homeWin, awayWin)
+			const matchObj = new Match(
+				id,
+				league,
+				leagueID,
+				season,
+				round,
+				date,
+				referee,
+				home,
+				homeID,
+				away,
+				awayID,
+				htHome,
+				htAway,
+				ftHome,
+				ftAway,
+				etHome,
+				etAway,
+				penHome,
+				penAway,
+				homeWin,
+				awayWin
+			);
 			matchObj.dbInsertMatchData();
 		}
 	}

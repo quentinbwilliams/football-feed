@@ -45,7 +45,7 @@ router.get("/:id/matches", async (req, res, next) => {
 		const { id } = req.params;
 		const league = new League(id);
 		await league.init();
-		await league.apiGetAllMatches();
+		await league.dbGetAllMatches();
 		res.send(league);
 	} catch (e) {
 		return new ExpressError(e);
@@ -72,7 +72,8 @@ router.get("/:id/matches/current", async (req, res, next) => {
 		const league = new League(id);
 		await league.init();
 		await league.apiGetCurrentRound();
-		await league.apiGetAllMatches();
+		await league.dbGetAllMatches();
+		const currentMatches = league.allMatches.map((match) => {});
 		res.send(league);
 	} catch (e) {
 		console.log(e);

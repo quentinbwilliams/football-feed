@@ -100,6 +100,19 @@ CREATE TABLE matches
 	created_at TIMESTAMPTZ DEFAULT Now()
 );
 
+CREATE TABLE highlights
+(
+	id SERIAL PRIMARY KEY,
+	home TEXT NOT NULL,
+	away TEXT NOT NULL,
+	competition TEXT NOT NULL,
+	date TEXT,
+	highlight_url TEXT NOT NULL,
+	competition_url TEXT NOT NULL,
+	highlight_embedded TEXT NOT NULL,
+	created_at TIMESTAMPTZ DEFAULT Now()
+)
+
 CREATE TABLE IF NOT EXISTS users_countries
 (	
 	id SERIAL PRIMARY KEY,

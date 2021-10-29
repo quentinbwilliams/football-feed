@@ -14,4 +14,19 @@ const router = express.Router();
  * GET ASSISTS
  * GET RED CARDS
  * GET YELLOW CARDS
-*/
+ */
+
+// GET ALL MATCHES FOR CURRENT SEASON
+router.get("/:id/matches", async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const team = new Team(id);
+		await team.init();
+		await team.apiGetAllMatches();
+		res.send(team);
+	} catch (e) {
+		return new ExpressError(e);
+	}
+});
+
+module.exports = router;

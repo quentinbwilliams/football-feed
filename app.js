@@ -6,11 +6,13 @@ const ensureLoggedIn = require("./middleware/ensureLoggedIn");
 const getUserData = require("./middleware/getUserData");
 const countryRoutes = require("./routes/country");
 const leagueRoutes = require("./routes/league");
+const teamRoutes = require("./routes/team");
 const userRoutes = require("./routes/user");
 
 app.use(express.json());
 app.use("/countries", countryRoutes);
 app.use("/leagues", leagueRoutes);
+app.use("/teams", teamRoutes);
 app.use("/users", userRoutes);
 
 app.use(function (req, res, next) {

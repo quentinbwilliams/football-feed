@@ -27,5 +27,10 @@ WHERE country_code='World'
 -- SELECT CURRENT ROUND OF MATCHES FOR A PARTICULAR LEAGUE
 SELECT api_football_id, league, league_id, season, round, date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win,  created_at
 FROM matches
-WHERE league_id = 2
-AND round = 'Group Stage - 2';
+WHERE league_id = $1
+AND round = $2;
+
+-- SELECT ALL MATCHES FOR A PARTICULAR TEAM
+SELECT api_football_id, league, league_id, season, round, date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win,  created_at
+FROM matches
+WHERE home_id = $1 or away_id = $1

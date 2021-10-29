@@ -80,7 +80,7 @@ class Team {
 			);
 			const data = request.data.response;
 			this.allMatches = data;
-			return data
+			return data;
 		} catch (e) {
 			console.log(e);
 		}
@@ -141,6 +141,14 @@ class Team {
 			);
 			const data = request.data.response[0].players;
 			this.squadStats = data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
+	async dbGetAllMatches() {
+		try {
+			const query = await db.query(`SELECT `);
 		} catch (e) {
 			console.log(e);
 		}

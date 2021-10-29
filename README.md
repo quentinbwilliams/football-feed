@@ -1,5 +1,8 @@
 TODO
 
+DATABASE:
+- Automate task to run seed scripts (particularly db/seed/matches).
+
 TEAMS:
 - METHODS & ROUTES
 

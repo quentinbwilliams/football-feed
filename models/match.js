@@ -52,6 +52,19 @@ class Match {
 		this.homeWin = homeWin;
 		this.awayWin = awayWin;
 	}
+
+	static async dbGetLeaguesTeams() {
+		try {
+			const query = await db.query(
+				`SELECT DISTINCT league_id, home_id FROM matches`
+			);
+			const data = query.rows;
+			return data;
+		} catch {
+			return new ExpressError(e);
+		}
+	}
+
 	async dbInsertMatchData() {
 		try {
 			const insert = await db.query(
@@ -82,7 +95,7 @@ class Match {
 				]
 			);
 		} catch (e) {
-			return new ExpressError("Unable to insert match data");
+			return new ExpressError(e);
 		}
 	}
 }

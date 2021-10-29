@@ -259,7 +259,7 @@ class League {
 			this.liveMatches = data;
 			return data;
 		} catch (e) {
-			return new ExpressError("Unable to get live match data");
+			return new ExpressError(e);
 		}
 	}
 
@@ -369,9 +369,23 @@ class League {
 				return leagueStandings;
 			}
 		} catch (e) {
-			return new ExpressError("Unable to get standings data");
+			return new ExpressError(e);
 		}
 	}
+
+	async dbGetTeamsInLeague() {
+		try {
+			const query = await db.query(
+				`SELECT DISTINCT home_id FROM matches WHERE league_id = $1`, [this.apiFootballID]
+			);
+			const data = query.rows;
+			this.teamsInLeague = data;
+			return data;
+		} catch (e) {
+			return new ExpressError(e)
+		}
+	}
+
 }
 
 module.exports = League;

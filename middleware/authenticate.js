@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 
-
-function authenticateJWT(req, res, next) {
+const authenticateJWT = (req, res, next) => {
 	try {
 		const tokenFromBody = req.body._token;
 		const payload = jwt.verify(tokenFromBody, SECRET_KEY);
@@ -12,4 +11,5 @@ function authenticateJWT(req, res, next) {
 		return next();
 	}
 }
-module.exports = { authenticateJWT };
+
+module.exports = authenticateJWT;

@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const ExpressError = require("./error");
-const { authenticateJWT } = require("./middleware/authenticate");
+const authenticateJWT = require("./middleware/authenticate");
+const ensureLoggedIn = require("./middleware/ensureLoggedIn");
+const getUserData = require("./middleware/getUserData");
 const countryRoutes = require("./routes/country");
 const leagueRoutes = require("./routes/league");
 const userRoutes = require("./routes/user");

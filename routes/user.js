@@ -16,9 +16,9 @@ router.post("/login", async (req, res, next) => {
 });
 
 // LOGOUT
-router.get("/logout", async (req, res, next) => {
-	const
-})
+// router.get("/logout", async (req, res, next) => {
+// 	const
+// })
 
 // GET user by id
 router.get("/:id", async (req, res, next) => {

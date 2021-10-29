@@ -3,7 +3,6 @@ const season = require("../season/season");
 const headers = require("../headers/api-football");
 const axios = require("axios").default;
 const Country = require("./country");
-const { head } = require("../routes/user");
 const ExpressError = require("../error");
 
 class League {

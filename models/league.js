@@ -113,8 +113,10 @@ class League {
 			this.type = leagueData.type;
 			if (standings.length <= 1) {
 				this.teams = standings[0];
+				return standings[0];
 			} else {
 				this.teams = standings;
+				return standings;
 			}
 		} catch (e) {
 			return new ExpressError("Unable to get league data from api");
@@ -180,6 +182,7 @@ class League {
 			);
 			const data = request.data.response;
 			this.allMatches = data;
+			return data;
 		} catch (e) {
 			return new ExpressError("Unable to get all match data");
 		}
@@ -190,13 +193,14 @@ class League {
 			const query = await db.query(
 				`SELECT api_football_id, league, league_id, season, round,date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win, created_at 
 				FROM matches
-				WHERE league_id = $1`, [this.apiFootballID]
+				WHERE league_id = $1`,
+				[this.apiFootballID]
 			);
 			const data = query.rows;
 			this.allMatches = data;
 			return data;
 		} catch (e) {
-			return new ExpressError(e)
+			return new ExpressError(e);
 		}
 	}
 
@@ -216,8 +220,25 @@ class League {
 			);
 			const data = request.data.response;
 			this.currentRound = data;
+			return data;
 		} catch (e) {
 			return new ExpressError("Unable to get current round data");
+		}
+	}
+
+	async dbGetCurrentRoundMatches() {
+		try {
+			const currentRound = await this.apiGetCurrentRound();
+			const query = await db.query(
+				`SELECT api_football_id, league, league_id, season, round, date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win,  created_at
+				FROM matches WHERE league_id = $1
+				AND round = $2`, [this.apiFootballID, currentRound[0]]
+			);
+			const data = query.rows;
+			this.currentRoundMatches = data;
+			return data;
+		} catch (e) {
+			return new ExpressError(e);
 		}
 	}
 
@@ -236,6 +257,7 @@ class League {
 			);
 			const data = request.data.response;
 			this.liveMatches = data;
+			return data;
 		} catch (e) {
 			return new ExpressError("Unable to get live match data");
 		}
@@ -255,9 +277,10 @@ class League {
 				options
 			);
 			const data = request.data.response;
-			this.topGoals = data;
+			this.goals = data;
+			return data;
 		} catch (e) {
-			return new ExpressError("Unable to get goals data");
+			return new ExpressError(e);
 		}
 	}
 
@@ -275,9 +298,10 @@ class League {
 				options
 			);
 			const data = request.data.response;
-			this.topAssists = data;
+			this.assists = data;
+			return data;
 		} catch (e) {
-			return new ExpressError("Unable to get assists data");
+			return new ExpressError(e);
 		}
 	}
 
@@ -295,9 +319,10 @@ class League {
 				options
 			);
 			const data = request.data.response;
-			this.topRedCards = data;
+			this.redCards = data;
+			return data;
 		} catch (e) {
-			return new ExpressError("Unable to get red card data");
+			return new ExpressError(e);
 		}
 	}
 
@@ -315,9 +340,10 @@ class League {
 				options
 			);
 			const data = request.data.response;
-			this.topYellowCards = data;
+			this.yellowCards = data;
+			return data
 		} catch (e) {
-			return new ExpressError("Unable to get yellow card data");
+			return new ExpressError(e);
 		}
 	}
 
@@ -335,10 +361,12 @@ class League {
 				options
 			);
 			const leagueStandings = request.data.response[0].league.standings;
-			if (this.type === 'League') {
+			if (this.type === "League") {
 				this.standings = leagueStandings[0];
+				return leagueStandings[0];
 			} else {
 				this.standings = leagueStandings;
+				return leagueStandings;
 			}
 		} catch (e) {
 			return new ExpressError("Unable to get standings data");

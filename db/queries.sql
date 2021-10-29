@@ -20,4 +20,12 @@ FROM leagues;
 -- SELECT LEAGUE BY COUNTRY CODE
 SELECT name, api_football_id, type, country_code
 FROM leagues
-WHERE country_code='World';
+WHERE country_code='World'
+
+
+
+-- SELECT CURRENT ROUND OF MATCHES FOR A PARTICULAR LEAGUE
+SELECT api_football_id, league, league_id, season, round, date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win,  created_at
+FROM matches
+WHERE league_id = 2
+AND round = 'Group Stage - 2';

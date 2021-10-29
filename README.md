@@ -11,3 +11,6 @@ ROUTES:
 - Call relevant class methods to give object data.
 - Send object in res.
 - Cache object in router.
+
+QUESTIONS:
+- How will my client and router communicate with each other in deployment?

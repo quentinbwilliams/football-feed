@@ -12,14 +12,19 @@ DATABASE:
 			* PROBLEM: -- This strategy will result in thousands of duplicates.
 			- Using SQL DISTINCT operator might solve our problem:
 			`SELECT DISTINCT league_id, home_id FROM matches`
-			Assuming each team plays at home at least once for each league, this query should return the exact values needed for leagues_teams.
+			- Assuming each team plays at home at least once for each league, this query should return the exact values needed for leagues_teams.
 			* SOLUTION:
 			- Add a method to the Match class with that query.
 			- This query can be used to seed the leagues_teams table.
 			- And can be modified in methods on League and Team such as:
-			getTeamsInLeague -> `SELECT DISTINCT home_id, league_id FROM matches WHERE league_id = `,
-			getLeaguesForTeam -> `SELECT DISTINCT home_id, league_id FROM matches WHERE team_id = `.
-			- Voila!			
+			`getTeamsInLeague` -> `SELECT DISTINCT home_id, league_id FROM matches WHERE league_id = `,
+			`getLeaguesForTeam` -> `SELECT DISTINCT home_id, league_id FROM matches WHERE team_id = `.
+		- To seed leagues_teams: add distinctness query to Match class. Insert those rows directly to leagues_teams.
+	- Bypassing leagues_teams:
+		- Adding distinctness queries to the League and Team classes will allow the dataflow to bypass leagues_teams table.
+		- Get the needed without writing a join query, which seems preferable. Let SQL do the heavy lifting.
+		- As teams are eliminated from leagues and cup competitions, the leagues_teams table will need to be updated -- adding a level of complexity.
+		- Matches will be updated on a frequent basis, so calling distinctness queries on leagues/teams will always give the most up-to-date data.
 
 TEAMS:
 - METHODS & ROUTES

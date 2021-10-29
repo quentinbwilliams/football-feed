@@ -263,7 +263,7 @@ class League {
 		}
 	}
 
-	async apiGetTopGoals() {
+	async apiGetGoals() {
 		try {
 			const options = {
 				headers: headers,
@@ -284,7 +284,7 @@ class League {
 		}
 	}
 
-	async apiGetTopAssists() {
+	async apiGetAssists() {
 		try {
 			const options = {
 				headers: headers,
@@ -305,7 +305,7 @@ class League {
 		}
 	}
 
-	async apiGetTopRedCards() {
+	async apiGetRedCards() {
 		try {
 			const options = {
 				headers: headers,
@@ -326,7 +326,7 @@ class League {
 		}
 	}
 
-	async apiGetTopYellowCards() {
+	async apiGetYellowCards() {
 		try {
 			const options = {
 				headers: headers,

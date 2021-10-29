@@ -80,6 +80,7 @@ class Team {
 			);
 			const data = request.data.response;
 			this.allMatches = data;
+			return data
 		} catch (e) {
 			console.log(e);
 		}

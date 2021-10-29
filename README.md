@@ -1,5 +1,8 @@
 TODO
 
+TEAMS:
+- METHODS & ROUTES
+
 USER MIDDLEWARE:
 - Ensure user is logged in.
 - Sign user with JWT.

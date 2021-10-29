@@ -2,6 +2,24 @@ TODO
 
 DATABASE:
 - Automate task to run seed scripts (particularly db/seed/matches).
+- Seed leagues_teams: Without this table, isolating league data on a team object is convoluted.
+	- To seed leagues_team:
+		- One strategy:
+		- dbGetAllMatches()
+		- Loop through all matches
+			- grab league_id, home_id, away_id
+			- insert into leagues_teams 
+			* PROBLEM: -- This strategy will result in thousands of duplicates.
+			- Using SQL DISTINCT operator might solve our problem:
+			`SELECT DISTINCT league_id, home_id FROM matches`
+			Assuming each team plays at home at least once for each league, this query should return the exact values needed for leagues_teams.
+			* SOLUTION:
+			- Add a method to the Match class with that query.
+			- This query can be used to seed the leagues_teams table.
+			- And can be modified in methods on League and Team such as:
+			getTeamsInLeague -> `SELECT DISTINCT home_id, league_id FROM matches WHERE league_id = `,
+			getLeaguesForTeam -> `SELECT DISTINCT home_id, league_id FROM matches WHERE team_id = `.
+			- Voila!			
 
 TEAMS:
 - METHODS & ROUTES

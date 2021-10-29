@@ -22,7 +22,7 @@ router.get("/:id/matches", async (req, res, next) => {
 		const { id } = req.params;
 		const team = new Team(id);
 		await team.init();
-		await team.apiGetAllMatches();
+		await team.dbGetAllMatches();
 		res.send(team);
 	} catch (e) {
 		return new ExpressError(e);

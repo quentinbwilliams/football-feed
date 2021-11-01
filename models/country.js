@@ -36,7 +36,7 @@ class Country {
 			const country = new Country(data.code, data.name, data.flag);
 			return country;
 		} catch (e) {
-			return new ExpressError("Unable to get country data with code");
+			return new ExpressError(e);
 		}
 	}
 
@@ -52,7 +52,7 @@ class Country {
 			const country = new Country(data.code, data.name, data.flag);
 			return country;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -67,7 +67,7 @@ class Country {
 			const countries = query.rows;
 			return countries;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -85,7 +85,7 @@ class Country {
 			const countries = request.data.response;
 			return countries;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -105,7 +105,7 @@ class Country {
 			const info = request.data.response;
 			this.info = info;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -117,7 +117,7 @@ class Country {
 				[this.code, this.name, this.flag]
 			);
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -136,7 +136,7 @@ class Country {
 			);
 			this.leagues = request.data.response;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -155,7 +155,7 @@ class Country {
 			);
 			this.teams = request.data.response;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -171,7 +171,7 @@ class Country {
 			this.leagues = data;
 			return data;
 		} catch (e) {
-			return new ExpressError("Unable to find leagues in country");
+			return new ExpressError(e);
 		}
 	}
 
@@ -187,7 +187,7 @@ class Country {
 			this.teams = data;
 			return data;
 		} catch (e) {
-			return new ExpressError("Unable to find teams for country");
+			return new ExpressError(e);
 		}
 	}
 
@@ -203,7 +203,7 @@ class Country {
 			this.nationalTeams = data;
 			return data;
 		} catch (e) {
-			return new ExpressError("Unable to find teams for country");
+			return new ExpressError(e);
 		}
 	}
 }

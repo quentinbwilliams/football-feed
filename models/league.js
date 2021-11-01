@@ -37,12 +37,16 @@ class League {
 	// INIT FUNCTION CALLS dgGetLeague() with league id.
 	async init() {
 		// CALL .init() ON A LEAGUE INSTANCE WITH API ID TO SET LEAGUE INFO
-		const data = await League.dbGetLeague(this.apiFootballID);
-		this.name = data.name;
-		this.countryName = data.country_name;
-		this.type = data.type;
-		this.logo = data.logo;
-		this.countryCode = data.country_code;
+		try {
+			const data = await League.dbGetLeague(this.apiFootballID);
+			this.name = data.name;
+			this.countryName = data.country_name;
+			this.type = data.type;
+			this.logo = data.logo;
+			this.countryCode = data.country_code;
+		} catch (e) {
+			return new ExpressError(e);
+		}
 	}
 
 	static async dbGetLeague(apiFootballID) {
@@ -56,7 +60,7 @@ class League {
 			const league = query.rows[0];
 			return league;
 		} catch (e) {
-			console.log("error", e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -73,7 +77,7 @@ class League {
 			const leagues = request.data.response;
 			return leagues;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -86,7 +90,7 @@ class League {
 			);
 			return res.rows;
 		} catch (e) {
-			return new ExpressError("Unable to get all leagues from database");
+			return new ExpressError(e);
 		}
 	}
 
@@ -120,7 +124,7 @@ class League {
 				return standings;
 			}
 		} catch (e) {
-			return new ExpressError("Unable to get league data from api");
+			return new ExpressError(e);
 		}
 	}
 
@@ -147,7 +151,7 @@ class League {
 					]
 				);
 			} catch (e) {
-				return new ExpressError("Unable to insert league data");
+				return new ExpressError(e);
 			}
 		}
 	}
@@ -164,7 +168,7 @@ class League {
 			);
 			return res.rows;
 		} catch (e) {
-			return new ExpressError("Unable to get leagues by type in country");
+			return new ExpressError(e);
 		}
 	}
 
@@ -185,7 +189,7 @@ class League {
 			this.allMatches = data;
 			return data;
 		} catch (e) {
-			return new ExpressError("Unable to get all match data");
+			return new ExpressError(e);
 		}
 	}
 
@@ -223,7 +227,7 @@ class League {
 			this.currentRound = data;
 			return data;
 		} catch (e) {
-			return new ExpressError("Unable to get current round data");
+			return new ExpressError(e);
 		}
 	}
 

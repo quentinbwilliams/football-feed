@@ -65,6 +65,49 @@ class Match {
 		}
 	}
 
+	static async dbCreateTable() {
+		try {
+			const query = await db.query(
+				`CREATE TABLE matches
+				(
+					api_football_id INTEGER PRIMARY KEY,
+					league TEXT NOT NULL,
+					league_id INTEGER NOT NULL,
+					season INTEGER,
+					round TEXT NOT NULL,
+					date TEXT,
+					referee TEXT,
+					home TEXT NOT NULL,
+					home_id INTEGER NOT NULL,
+					away TEXT NOT NULL,
+					away_id INTEGER NOT NULL,
+					ht_home INTEGER,
+					ht_away INTEGER,
+					ft_home INTEGER,
+					ft_away INTEGER,
+					et_home INTEGER,
+					et_away INTEGER,
+					pen_home INTEGER,
+					pen_away INTEGER,
+					home_win BOOLEAN,
+					away_win BOOLEAN,
+					created_at TIMESTAMPTZ DEFAULT Now()
+				)`
+			);
+			return query
+		} catch (e) {
+			return new ExpressError(e);
+		}
+	}
+
+	static async dbDropTable() {
+		try {
+			const query = await db.query(`DROP TABLE matches`);
+		} catch (e) {
+			return new ExpressError(e);
+		}
+	}
+
 	async dbInsertMatchData() {
 		try {
 			const insert = await db.query(

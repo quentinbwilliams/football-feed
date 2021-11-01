@@ -26,6 +26,7 @@ class League {
 	 * .apiGetTopRedCards()
 	 * .apiGetTopYellowCards()
 	 * .apiGetStandings()
+	 * .dbGetTeamsInLeague()
 	 ************************************************/
 
 	constructor(apiFootballID) {
@@ -232,7 +233,8 @@ class League {
 			const query = await db.query(
 				`SELECT api_football_id, league, league_id, season, round, date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win,  created_at
 				FROM matches WHERE league_id = $1
-				AND round = $2`, [this.apiFootballID, currentRound[0]]
+				AND round = $2`,
+				[this.apiFootballID, currentRound[0]]
 			);
 			const data = query.rows;
 			this.currentRoundMatches = data;
@@ -341,7 +343,7 @@ class League {
 			);
 			const data = request.data.response;
 			this.yellowCards = data;
-			return data
+			return data;
 		} catch (e) {
 			return new ExpressError(e);
 		}
@@ -376,16 +378,16 @@ class League {
 	async dbGetTeamsInLeague() {
 		try {
 			const query = await db.query(
-				`SELECT DISTINCT home_id FROM matches WHERE league_id = $1`, [this.apiFootballID]
+				`SELECT DISTINCT home_id FROM matches WHERE league_id = $1`,
+				[this.apiFootballID]
 			);
-			const data = query.rows;
+			const data = query.rows.map((team) => team.home_id);
 			this.teamsInLeague = data;
 			return data;
 		} catch (e) {
-			return new ExpressError(e)
+			return new ExpressError(e);
 		}
 	}
-
 }
 
 module.exports = League;

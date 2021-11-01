@@ -2,6 +2,7 @@ const db = require("../db/db");
 const axios = require("axios").default;
 const headers = require("../headers/api-football");
 const season = require("../season/season");
+const League = require("./league");
 
 class Team {
 	/************************************************
@@ -172,12 +173,14 @@ class Team {
 				`SELECT DISTINCT league_id FROM matches WHERE home_id = $1`,
 				[this.apiFootballID]
 			);
-			const data = query.rows;
+			const data = query.rows.map((league) => league.league_id);
 			this.leagues = data;
 			return data;
 		} catch (e) {
 			console.log(e);
 		}
+
+		async;
 	}
 }
 

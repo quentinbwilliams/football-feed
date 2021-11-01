@@ -25,7 +25,19 @@ router.get("/:id/matches", async (req, res, next) => {
 		await team.dbGetAllMatches();
 		res.send(team);
 	} catch (e) {
-		return new ExpressError(e);
+		return new next(e);
+	}
+});
+
+router.get("/:id/matches/completed", async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const team = new Team(id);
+		await team.init();
+		await team.dbGetCompletedMatches();
+		res.send(team);
+	} catch (e) {
+		return new next(e);
 	}
 });
 

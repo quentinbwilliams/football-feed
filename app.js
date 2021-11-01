@@ -4,9 +4,9 @@ const ExpressError = require("./error");
 const authenticateJWT = require("./middleware/authenticate");
 const ensureLoggedIn = require("./middleware/ensureLoggedIn");
 const getUserData = require("./middleware/getUserData");
-const countryRoutes = require("./routes/country");
-const leagueRoutes = require("./routes/league");
-const teamRoutes = require("./routes/team");
+const countryRoutes = require("./routes/countries");
+const leagueRoutes = require("./routes/leagues");
+const teamRoutes = require("./routes/teams");
 const userRoutes = require("./routes/user");
 
 app.use(express.json());

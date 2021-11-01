@@ -167,6 +167,22 @@ class Team {
 		}
 	}
 
+	async dbGetCompletedMatches() {
+		try {
+			const query = await db.query(
+				`SELECT api_football_id, league, league_id, season, round, date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win,  created_at
+				FROM matches
+				WHERE home_id = $1 OR away_id = $1 AND ft_home >= 0`,
+				[this.apiFootballID]
+			);
+			const data = query.rows;
+			this.completedMatches = data;
+			return data;
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	async dbGetTeamLeagues() {
 		try {
 			const query = await db.query(

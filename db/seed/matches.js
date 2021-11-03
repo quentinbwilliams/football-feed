@@ -43,11 +43,8 @@ const ExpressError = require("../../error");
 // UEFA Champions League Women (WF) - 525
 //? UEFA Europa Conference League (WF) - 848
 
-
 (async () => {
 	{
-		const dropTable = await Match.dbDropTable();
-		const createTable = await Match.dbCreateTable();
 		// FOR EACH LEAGUE ID, CREATE A LEAGUE OBJECT AND GET ALL MATCHES IN THE LEAGUE
 		for (let i = 0; i < LEAGUE_IDS.length; i++)
 			try {
@@ -55,7 +52,8 @@ const ExpressError = require("../../error");
 				await leagueObj.init();
 				await leagueObj.apiGetAllMatches();
 				const matches = leagueObj.allMatches;
-				// FOR EACH MATCH, GET THE DATA, CREATE A NEW MATCH OBJECT, CALL SEED METHOD TO PASS DATA INTO DB
+				// FOR EACH MATCH, GET THE DATA, CREATE A NEW MATCH OBJECT, CHECK IF MATCH DATA EXISTS:
+				// IF MATCH DATA EXISTS: UPDATE; ELSE: INSERT
 				for (let j = 0; j < matches.length; j++) {
 					const id = matches[j].fixture.id;
 					const league = matches[j].league.name;
@@ -101,7 +99,12 @@ const ExpressError = require("../../error");
 						homeWin,
 						awayWin
 					);
-					matchObj.dbInsertMatchData();
+					const matchInDB = await Match.dbHasMatch(id);
+					if (matchInDB) {
+						matchObj.dbUpdateMatchData();
+					} else {
+						matchObj.dbInsertMatchData();
+					}
 				}
 				return leagueObj;
 			} catch (e) {

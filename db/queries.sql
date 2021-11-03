@@ -34,3 +34,8 @@ AND round = $2;
 SELECT api_football_id, league, league_id, season, round, date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win,  created_at
 FROM matches
 WHERE home_id = $1 or away_id = $1
+
+
+-- UPDATE MATCH DATE, REFEREE, HT_HOME, HT_AWAY, FT_HOME, FT_AWAY, ET_HOME, ET_AWAY, PEN_HOME, PEN_AWAY, HOME_WIN, AWAY_WIN
+UPDATE matches SET date = $1, referee = $2, ht_home = $3, ht_away = $4, ft_home = $5, ft_away = $6, et_home = $7, et_away = $8, pen_home = $9, pen_away = $10, home_win = $11, away_win = $12
+WHERE api_football_id = $13

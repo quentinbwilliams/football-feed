@@ -5,6 +5,7 @@ const axios = require("axios").default;
 const Country = require("./country");
 const Team = require("./team");
 const ExpressError = require("../error");
+const { dbGetTeamByID } = require("./team");
 
 class Match {
 	constructor(
@@ -94,15 +95,26 @@ class Match {
 					created_at TIMESTAMPTZ DEFAULT Now()
 				)`
 			);
-			return query
+			return query;
 		} catch (e) {
 			return new ExpressError(e);
 		}
 	}
 
-	static async dbDropTable() {
+	static async dbHasMatch(apiFootballID) {
 		try {
-			const query = await db.query(`DROP TABLE matches`);
+			const query = await db.query(
+				`SELECT api_football_id
+				FROM matches
+				WHERE api_football_id = $1`,
+				[apiFootballID]
+			);
+			const match = query.rows[0];
+			if (match.length === 0) {
+				return false
+			} else {
+				return true
+			}
 		} catch (e) {
 			return new ExpressError(e);
 		}
@@ -111,7 +123,28 @@ class Match {
 	async dbInsertMatchData() {
 		try {
 			const insert = await db.query(
-				`INSERT INTO matches (api_football_id, league, league_id, season, round, date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win)
+				`INSERT INTO matches (
+				api_football_id,
+				league,
+				league_id,
+				season,
+				round,
+				date,
+				referee,
+				home,
+				home_id,
+				away,
+				away_id,
+				ht_home,
+				ht_away,
+				ft_home,
+				ft_away,
+				et_home,
+				et_away,
+				pen_home,
+				pen_away,
+				home_win,
+				away_win)
 				VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)`,
 				[
 					this.apiFootballID,
@@ -137,6 +170,66 @@ class Match {
 					this.awayWin,
 				]
 			);
+			console.log(
+				`CREATED ${this.apiFootballID}, ${this.home} vs ${this.away}, in ${this.league}, on ${this.date}`
+			);
+		} catch (e) {
+			return new ExpressError(e);
+		}
+	}
+
+	async dbUpdateMatchData() {
+		try {
+			// UPDATE MATCH DATE, REFEREE, HT_HOME, HT_AWAY, FT_HOME, FT_AWAY, ET_HOME, ET_AWAY, PEN_HOME, PEN_AWAY, HOME_WIN, AWAY_WIN
+			const update = await db.query(
+				`UPDATE matches
+				SET date = $1,
+				referee = $2,
+				ht_home = $3,
+				ht_away = $4,
+				ft_home = $5,
+				ft_away = $6,
+				et_home = $7,
+				et_away = $8,
+				pen_home = $9,
+				pen_away = $10,
+				home_win = $11,
+				away_win = $12
+				WHERE api_football_id = $13
+				RETURNING
+				date,
+				referee, 
+				ht_home, 
+				ht_away, 
+				ft_home, 
+				ft_away, 
+				et_home, 
+				et_away, 
+				pen_home,
+				pen_away,
+				home_win,
+				away_win,
+				api_football_id`,
+				[
+					this.date,
+					this.referee,
+					this.htHome,
+					this.htAway,
+					this.ftHome,
+					this.ftAway,
+					this.etHome,
+					this.etAway,
+					this.penHome,
+					this.penAway,
+					this.homeWin,
+					this.awayWin,
+					this.api_football_id,
+				]
+			);
+			console.log(
+				`UPDATED ${this.apiFootballID}, ${this.home} vs ${this.away}, in ${this.league}, on ${this.date}`
+			);
+			return update;
 		} catch (e) {
 			return new ExpressError(e);
 		}

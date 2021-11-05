@@ -105,9 +105,9 @@ class Match {
 			);
 			const match = query.rows[0];
 			if (match.length === 0) {
-				return false
+				return false;
 			} else {
-				return true
+				return true;
 			}
 		} catch (e) {
 			return new ExpressError(e);
@@ -189,21 +189,7 @@ class Match {
 				pen_away = $10,
 				home_win = $11,
 				away_win = $12
-				WHERE api_football_id = $13
-				RETURNING
-				date,
-				referee, 
-				ht_home, 
-				ht_away, 
-				ft_home, 
-				ft_away, 
-				et_home, 
-				et_away, 
-				pen_home,
-				pen_away,
-				home_win,
-				away_win,
-				api_football_id`,
+				WHERE api_football_id = $13`,
 				[
 					this.date,
 					this.referee,
@@ -221,7 +207,7 @@ class Match {
 				]
 			);
 			console.log(
-				`UPDATED ${this.apiFootballID}, ${this.home} vs ${this.away}, in ${this.league}, on ${this.date}`
+				`UPDATED ${this.home} ${this.ftHome} vs ${this.away} ${this.ftAway}, in ${this.league}`
 			);
 		} catch (e) {
 			return new ExpressError(e);

@@ -44,73 +44,65 @@ const ExpressError = require("../../error");
 //? UEFA Europa Conference League (WF) - 848
 
 const seedMatches = async () => {
-	{
-		// FOR EACH LEAGUE ID, CREATE A LEAGUE OBJECT AND CALL API FOR ALL MATCHES IN THE LEAGUE
-		for (let i = 0; i < LEAGUE_IDS.length; i++)
-			try {
-				const leagueObj = new League(LEAGUE_IDS[i]);
-				await leagueObj.init();
-				await leagueObj.apiGetAllMatches();
-				const matches = leagueObj.allMatches;
-				// FOR EACH MATCH, GET THE DATA, CREATE A NEW MATCH OBJECT, CHECK IF MATCH DATA EXISTS:
-				// IF MATCH DATA EXISTS: UPDATE; ELSE: INSERT
-				for (let j = 0; j < matches.length; j++) {
-					const id = matches[j].fixture.id;
-					const league = matches[j].league.name;
-					const leagueID = matches[j].league.id;
-					const season = matches[j].league.season;
-					const round = matches[j].league.round;
-					const date = matches[j].fixture.date;
-					const referee = matches[j].fixture.referee;
-					const home = matches[j].teams.home.name;
-					const homeID = matches[j].teams.home.id;
-					const away = matches[j].teams.away.name;
-					const awayID = matches[j].teams.away.id;
-					const htHome = matches[j].score.halftime.home;
-					const htAway = matches[j].score.halftime.away;
-					const ftHome = matches[j].score.fulltime.home;
-					const ftAway = matches[j].score.fulltime.away;
-					const etHome = matches[j].score.extratime.away;
-					const etAway = matches[j].score.extratime.away;
-					const penHome = matches[j].score.penalty.home;
-					const penAway = matches[j].score.penalty.away;
-					const homeWin = matches[j].teams.home.winner;
-					const awayWin = matches[j].teams.away.winner;
-					const matchObj = new Match(
-						id,
-						league,
-						leagueID,
-						season,
-						round,
-						date,
-						referee,
-						home,
-						homeID,
-						away,
-						awayID,
-						htHome,
-						htAway,
-						ftHome,
-						ftAway,
-						etHome,
-						etAway,
-						penHome,
-						penAway,
-						homeWin,
-						awayWin
-					);
-					const matchInDB = await Match.dbHasMatch(id);
-					if (matchInDB) {
-						await matchObj.dbUpdateMatchData();
-					} else {
-						await matchObj.dbInsertMatchData();
-					}
-				}
-				return leagueObj;
-			} catch (e) {
-				return new ExpressError(e);
-			}
+	try {
+		const leagueObj = new League(2);
+		await leagueObj.init();
+		await leagueObj.apiGetAllMatches();
+		const matches = leagueObj.allMatches;
+		console.log(matches.length);
+		for (let j = 0; j < matches.length; j++) {
+			const match = matches[j];
+			const id = match.fixture.id;
+			const league = match.league.name;
+			const leagueID = match.league.id;
+			const season = match.league.season;
+			const round = match.league.round;
+			const date = match.fixture.date;
+			const referee = match.fixture.referee;
+			const home = match.teams.home.name;
+			const away = match.teams.away.name;
+			const homeID = match.teams.home.id;
+			const awayID = match.teams.away.id;
+			const htHome = match.score.halftime.home;
+			const htAway = match.score.halftime.away;
+			const ftHome = match.score.fulltime.home;
+			const ftAway = match.score.fulltime.away;
+			const etHome = match.score.extratime.home;
+			const etAway = match.score.extratime.away;
+			const penHome = match.score.penalty.home;
+			const penAway = match.score.penalty.away;
+			const homeWin = match.teams.home.winner;
+			const awayWin = match.teams.away.winner;
+			const matchObj = new Match(
+				id,
+				league,
+				leagueID,
+				season,
+				round,
+				date,
+				referee,
+				home,
+				homeID,
+				away,
+				awayID,
+				htHome,
+				htAway,
+				ftHome,
+				ftAway,
+				etHome,
+				etAway,
+				penHome,
+				penAway,
+				homeWin,
+				awayWin
+			);
+			await matchObj.dbUpdateMatchData()
+		}
+	} catch (e) {
+		return new ExpressError(e);
 	}
-}
+};
+
+seedMatches();
 
 module.exports = seedMatches;

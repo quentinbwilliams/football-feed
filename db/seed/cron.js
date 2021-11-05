@@ -21,5 +21,5 @@ const leaguesTeams = cron.schedule("* * 0 * *", async () => {
 	}
 });
 
-matches.start();
+matches.stop();
 leaguesTeams.start();

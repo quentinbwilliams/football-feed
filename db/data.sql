@@ -145,14 +145,6 @@ CREATE TABLE countries_leagues
 	created_at TIMESTAMPTZ DEFAULT Now()
 );
 
-CREATE TABLE leagues_teams
-(
-	id SERIAL PRIMARY KEY,
-	league_id INTEGER REFERENCES leagues (api_football_id) ON DELETE CASCADE,
-	team_id INTEGER REFERENCES teams (api_football_id) ON DELETE CASCADE,
-	created_at TIMESTAMPTZ DEFAULT Now()
-);
-
 CREATE TABlE teams_players
 (
 	id SERIAL PRIMARY KEY,

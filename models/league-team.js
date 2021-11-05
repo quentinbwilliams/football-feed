@@ -13,7 +13,7 @@ class LeagueTeam {
 	static async dbCreateLeaguesTeamsView() {
 		try {
 			const create = await db.query(
-				`CREATE MATERIALIZED VIEW leagues_teams AS SELECT DISTINCT league_id, home_id FROM matches;`
+				`CREATE MATERIALIZED VIEW leagues_teams AS SELECT DISTINCT league_id, home_id FROM matches`
 			);
 			return create.rows;
 		} catch (e) {

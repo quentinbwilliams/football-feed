@@ -382,16 +382,26 @@ class League {
 	async dbGetTeamsInLeague() {
 		try {
 			const query = await db.query(
-				`SELECT DISTINCT home_id FROM matches WHERE league_id = $1`,
+				`SELECT
+				leagues_teams.league_id,
+				leagues_teams.team_id,
+				teams.name,
+				teams.logo,
+				teams.city,
+				teams.founded
+				FROM leagues_teams
+				JOIN teams ON leagues_teams.team_id=teams.api_football_id
+				WHERE leagues_teams.league_id = $1`,
 				[this.apiFootballID]
 			);
-			const data = query.rows.map((team) => team.home_id);
+			const data = query.rows;
 			this.teamsInLeague = data;
-			return data;
+			return data
 		} catch (e) {
 			return new ExpressError(e);
 		}
 	}
+
 }
 
 module.exports = League;

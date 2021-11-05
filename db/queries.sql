@@ -39,3 +39,15 @@ WHERE home_id = $1 or away_id = $1
 -- UPDATE MATCH DATE, REFEREE, HT_HOME, HT_AWAY, FT_HOME, FT_AWAY, ET_HOME, ET_AWAY, PEN_HOME, PEN_AWAY, HOME_WIN, AWAY_WIN
 UPDATE matches SET date = $1, referee = $2, ht_home = $3, ht_away = $4, ft_home = $5, ft_away = $6, et_home = $7, et_away = $8, pen_home = $9, pen_away = $10, home_win = $11, away_win = $12
 WHERE api_football_id = $13
+
+-- JOIN TEAMS ON LEAGUES_TEAMS WHERE LEAGUE ID IS KNOWN
+SELECT
+leagues_teams.league_id,
+leagues_teams.team_id,
+teams.name,
+teams.logo,
+teams.city,
+teams.founded
+FROM leagues_teams
+JOIN teams ON leagues_teams.team_id=teams.api_football_id
+WHERE leagues_teams.league_id = 39;

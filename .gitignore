@@ -1,6 +1,6 @@
 node_modules
 headers
-parse
+parse.js
 db/.test-data.sql
 config.js
 db/queries.sql

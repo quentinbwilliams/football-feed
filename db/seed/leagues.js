@@ -8,17 +8,21 @@ const League = require("../../models/league");
 */
 
 (async () => {
-  // static method gets all countries from api
-  const leagues = await League.apiGetAllLeagues();
-  for (let i = 0; i < leagues.length; i++) {
-    let league = new League(
-      leagues[i].league.id,
-      leagues[i].league.name,
-      leagues[i].country.name,
-      leagues[i].league.type,
-      leagues[i].league.logo,
-      leagues[i].country.code
-    );
-    const insert = await league.dbInsertLeagueData();
-  }
+	// static method gets all countries from api
+	try {
+		const leagues = await League.apiGetAllLeagues();
+		for (let i = 0; i < leagues.length; i++) {
+			let league = new League(
+				leagues[i].league.id,
+				leagues[i].league.name,
+				leagues[i].country.name,
+				leagues[i].league.type,
+				leagues[i].league.logo,
+				leagues[i].country.code
+			);
+			const insert = await league.dbInsertLeagueData();
+		}
+	} catch (e) {
+		console.log(e);
+	}
 })();

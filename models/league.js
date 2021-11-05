@@ -195,7 +195,28 @@ class League {
 	async dbGetAllMatches() {
 		try {
 			const query = await db.query(
-				`SELECT api_football_id, league, league_id, season, round,date, referee, home, home_id, away, away_id, ht_home, ht_away, ft_home, ft_away, et_home, et_away, pen_home, pen_away, home_win, away_win, created_at 
+				`SELECT
+				api_football_id,
+				league,
+				league_id,
+				season,
+				round,date,
+				referee,
+				home,
+				home_id,
+				away,
+				away_id,
+				ht_home,
+				ht_away,
+				ft_home,
+				ft_away,
+				et_home,
+				et_away,
+				pen_home,
+				pen_away,
+				home_win,
+				away_win,
+				created_at
 				FROM matches
 				WHERE league_id = $1`,
 				[this.apiFootballID]

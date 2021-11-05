@@ -4,4 +4,3 @@ parse.js
 db/.test-data.sql
 config.js
 db/queries.sql
-.vscode

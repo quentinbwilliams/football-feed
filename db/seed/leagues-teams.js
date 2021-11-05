@@ -6,11 +6,13 @@ const LeagueTeam = require("../../models/league-team");
 	The method itself utilizes a `SELECT DISTINCT` query on the matches table.
 */
 
-(async () => {
+const updateLeaguesTeams = async () => {
 	try {
 		const deleteLeagueTeamsView = await LeagueTeam.dbDeleteLeaguesTeamsView();
 		const createLeaguesTeamsView = await LeagueTeam.dbCreateLeaguesTeamsView();
 	} catch (e) {
 		return new ExpressError(e);
 	}
-})();
+}
+
+module.exports = updateLeaguesTeams;

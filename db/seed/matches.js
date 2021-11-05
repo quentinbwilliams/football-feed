@@ -43,9 +43,9 @@ const ExpressError = require("../../error");
 // UEFA Champions League Women (WF) - 525
 //? UEFA Europa Conference League (WF) - 848
 
-(async () => {
+const seedMatches = async () => {
 	{
-		// FOR EACH LEAGUE ID, CREATE A LEAGUE OBJECT AND GET ALL MATCHES IN THE LEAGUE
+		// FOR EACH LEAGUE ID, CREATE A LEAGUE OBJECT AND CALL API FOR ALL MATCHES IN THE LEAGUE
 		for (let i = 0; i < LEAGUE_IDS.length; i++)
 			try {
 				const leagueObj = new League(LEAGUE_IDS[i]);
@@ -101,9 +101,9 @@ const ExpressError = require("../../error");
 					);
 					const matchInDB = await Match.dbHasMatch(id);
 					if (matchInDB) {
-						matchObj.dbUpdateMatchData();
+						await matchObj.dbUpdateMatchData();
 					} else {
-						matchObj.dbInsertMatchData();
+						await matchObj.dbInsertMatchData();
 					}
 				}
 				return leagueObj;
@@ -111,4 +111,6 @@ const ExpressError = require("../../error");
 				return new ExpressError(e);
 			}
 	}
-})();
+}
+
+module.exports = seedMatches;

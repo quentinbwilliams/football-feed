@@ -223,7 +223,6 @@ class Match {
 			console.log(
 				`UPDATED ${this.apiFootballID}, ${this.home} vs ${this.away}, in ${this.league}, on ${this.date}`
 			);
-			return update;
 		} catch (e) {
 			return new ExpressError(e);
 		}

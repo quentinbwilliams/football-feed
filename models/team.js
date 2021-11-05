@@ -34,7 +34,7 @@ class Team {
 			const team = query.rows[0];
 			return team;
 		} catch (e) {
-			next(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -64,7 +64,7 @@ class Team {
 				]
 			);
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -85,7 +85,7 @@ class Team {
 			this.allMatches = data;
 			return data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -105,7 +105,7 @@ class Team {
 			const data = request.data.response;
 			this.liveMatches = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -125,7 +125,7 @@ class Team {
 			const data = request.data.response;
 			this.injuryList = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -145,7 +145,7 @@ class Team {
 			const data = request.data.response[0].players;
 			this.squadStats = data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -163,7 +163,7 @@ class Team {
 			this.allMatches = data;
 			return data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
@@ -179,24 +179,30 @@ class Team {
 			this.completedMatches = data;
 			return data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
 	}
 
 	async dbGetTeamLeagues() {
 		try {
 			const query = await db.query(
-				`SELECT DISTINCT league_id FROM matches WHERE home_id = $1`,
+				`SELECT
+				leagues_teams.league_id,
+				leagues_teams.team_id,
+				leagues.name,
+				leagues.type,
+				leagues.logo
+				FROM leagues_teams
+				JOIN leagues ON leagues_teams.league_id=leagues.api_football_id
+				WHERE leagues_teams.team_id = $1`,
 				[this.apiFootballID]
 			);
-			const data = query.rows.map((league) => league.league_id);
+			const data = query.rows;
 			this.leagues = data;
 			return data;
 		} catch (e) {
-			console.log(e);
+			return new ExpressError(e);
 		}
-
-		async;
 	}
 }
 

@@ -42,12 +42,22 @@ WHERE api_football_id = $13
 
 -- JOIN TEAMS ON LEAGUES_TEAMS WHERE LEAGUE ID IS KNOWN
 SELECT
+teams.name as team_name,
+teams.founded as team_founded,
+teams.logo as team_logo,
+teams.city as team_city,
+leagues_teams.league_id
+FROM teams
+JOIN leagues_teams ON teams.league_id=leagues_teams.league_id
+WHERE leagues_teams.league_id = 39;
+
+-- JOIN LEAGUES ON LEAGUES_TEAMS WHERE TEAM ID IS KNOWN
+SELECT
 leagues_teams.league_id,
 leagues_teams.team_id,
-teams.name,
-teams.logo,
-teams.city,
-teams.founded
+leagues.name,
+leagues.type,
+leagues.logo
 FROM leagues_teams
-JOIN teams ON leagues_teams.team_id=teams.api_football_id
-WHERE leagues_teams.league_id = 39;
+JOIN leagues ON leagues_teams.league_id=leagues.api_football_id
+WHERE leagues_teams.team_id = 40;

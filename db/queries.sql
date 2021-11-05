@@ -61,3 +61,26 @@ leagues.logo
 FROM leagues_teams
 JOIN leagues ON leagues_teams.league_id=leagues.api_football_id
 WHERE leagues_teams.team_id = 40;
+
+-- JOIN LEAGUES ON USERS_LEAGUES WHERE USER ID IS KNOWN
+SELECT
+users_leagues.user_id,
+users_leagues.league_id,
+leagues.name,
+leagues.type,
+leagues.logo
+FROM users_leagues
+JOIN leagues on users_leagues.league_id=leagues.api_football_id
+WHERE users_leagues.user_id = $1;
+
+-- JOIN TEAMS ON USERS_TEAMS WHERE USER ID IS KNOWN
+SELECT
+users_teams.user_id,
+users_teams.team_id,
+teams.name as team_name,
+teams.founded as team_founded,
+teams.logo as team_logo,
+teams.city as team_city
+FROM users_teams
+JOIN teams on users_teams.team_id=teams.api_football_id
+WHERE users_teams.user_id = $1;

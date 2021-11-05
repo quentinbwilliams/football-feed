@@ -60,8 +60,8 @@ router.get("/:id/teams", async (req, res, next) => {
 	}
 });
 
-// UPDATE user leagues
-router.patch("/:id/league/:leagueID", async (req, res, next) => {
+// ADD user leagues
+router.post("/:id/leagues/:leagueID", async (req, res, next) => {
 	const { id, leagueID } = req.params;
 	try {
 		const getUser = await User.getUserByID(id);
@@ -73,8 +73,8 @@ router.patch("/:id/league/:leagueID", async (req, res, next) => {
 	}
 });
 
-// UPDATE user teams
-router.patch("/:id/team/:teamID", async (req, res, next) => {
+// ADD user teams
+router.post("/:id/teams/:teamID", async (req, res, next) => {
 	const { id, teamID } = req.params;
 	try {
 		const getUser = await User.getUserByID(id);

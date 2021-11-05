@@ -144,28 +144,25 @@ class User {
 	 ************************************************/
 
 	async dbGetUserLeagues() {
-		// QUERY USERS_LEAGUES WITH USER ID
-		const leaguesArray = [];
-		const getLeagueIDs = await db.query(
-			`SELECT league_id
-			FROM users_leagues
-			WHERE user_id = $1`,
-			[this.id]
-		);
-		const leagueIDs = getLeagueIDs.rows;
-		for (let i = 0; i < leagueIDs.length; i++) {
-			const leagueID = leagueIDs[i].league_id;
-			const leagueQuery = await db.query(
-				`SELECT api_football_id, name, country_name, type, logo, country_code
-				FROM leagues
-				WHERE api_football_id = $1`,
-				[leagueID]
+		try {
+			const query = await db.query(
+				`SELECT
+				users_leagues.user_id,
+				users_leagues.league_id,
+				leagues.name,
+				leagues.type,
+				leagues.logo
+				FROM users_leagues
+				JOIN leagues on users_leagues.league_id=leagues.api_football_id
+				WHERE users_leagues.user_id = $1`,
+				[this.id]
 			);
-			const league = leagueQuery.rows[0];
-			leaguesArray.push(league);
+			const data = query.rows;
+			this.leagues = data;
+			return data;
+		} catch (e) {
+			return new ExpressError(e);
 		}
-		this.leagues = leaguesArray;
-		return leaguesArray;
 	}
 
 	async dbAddUserLeague(leagueID) {
@@ -182,6 +179,7 @@ class User {
 					VALUES ($1,$2)`,
 					[this.id, leagueID]
 				);
+				return "Successfully added league";
 			}
 		} catch (e) {
 			next(e);
@@ -209,29 +207,26 @@ class User {
 	 ************************************************/
 
 	async dbGetUserTeams() {
-		const teamsArray = [];
-		const getTeamIDs = await db.query(
-			`SELECT team_id
-			FROM users_teams
-			WHERE user_id = $1`,
-			[this.id]
-		);
-		const teamIDs = getTeamIDs.rows;
-		console.log("teamIDs: ", teamIDs);
-		for (let i = 0; i < teamIDs.length; i++) {
-			const teamID = teamIDs[i].team_id;
-			console.log("teamID", teamID);
-			const teamQuery = await db.query(
-				`SELECT api_football_id, name, country, founded, national, logo, city
-				FROM teams
-				WHERE api_football_id = $1`,
-				[teamID]
+		try {
+			const query = await db.query(
+				`SELECT
+				users_teams.user_id,
+				users_teams.team_id,
+				teams.name as team_name,
+				teams.founded as team_founded,
+				teams.logo as team_logo,
+				teams.city as team_city
+				FROM users_teams
+				JOIN teams on users_teams.team_id=teams.api_football_id
+				WHERE users_teams.user_id = $1`,
+				[this.id]
 			);
-			const team = teamQuery.rows[0];
-			teamsArray.push(team);
+			const data = query.rows;
+			this.teams = data;
+			return data;
+		} catch (e) {
+			return new ExpressError(e);
 		}
-		this.teams = teamsArray;
-		return teamsArray;
 	}
 
 	async dbAddUserTeam(teamID) {
@@ -239,7 +234,7 @@ class User {
 			const userTeams = await this.dbGetUserTeams();
 			console.log;
 			let findTeam = userTeams.find((obj) => obj.api_football_id == teamID);
-			console.log(userTeams)
+			console.log(userTeams);
 			if (findTeam) {
 				throw new ExpressError("You already follow this team");
 			} else {
@@ -265,7 +260,7 @@ class User {
 			);
 			return remove.rows[0];
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 	}
 }

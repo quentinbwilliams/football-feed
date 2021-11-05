@@ -10,7 +10,7 @@ class LeagueTeam {
 		this.teamID = teamID;
 	}
 
-	static async dbCreateLeaguesTeamsTable() {
+	static async dbCreateLeaguesTeamsView() {
 		try {
 			const create = await db.query(
 				`CREATE MATERIALIZED VIEW leagues_teams AS SELECT DISTINCT league_id, home_id FROM matches;`
@@ -22,4 +22,4 @@ class LeagueTeam {
 	}
 }
 
-module.exports = LeagueTeam
+module.exports = LeagueTeam;

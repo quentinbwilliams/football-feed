@@ -27,8 +27,12 @@ DATABASE:
     - Get the needed without writing a join query, which seems preferable. Let SQL do the heavy lifting.
     - As teams are eliminated from leagues and cup competitions, the leagues_teams table will need to be updated -- adding a level of complexity.
     - Matches will be updated on a frequent basis, so calling distinctness queries on leagues/teams will always give the most up-to-date data.
-		* PROBLEM: This query style is costly and can be simplified.
-		- Instead of using `SELECT DISTINCT` in League and Team, create a materialized view of the leagues_teams table. 
+		- This query style is costly and can be simplified.
+			- Instead of using `SELECT DISTINCT` in League and Team, create a materialized view of the leagues_teams table. 
+			- Add a static methods to LeagueTeam class to drop and create the materialized leagues_teams view from the matches table.
+			- Remove `SELECT DISTINCT` query methods from League and Team classes.
+			- Add methods to League and Team classes that query the leagues_teams view.
+
 
 TEAMS:
 

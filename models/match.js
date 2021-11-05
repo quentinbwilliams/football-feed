@@ -1,11 +1,5 @@
 const db = require("../db/db");
-const season = require("../season");
-const headers = require("../headers/api-football");
-const axios = require("axios").default;
-const Country = require("./country");
-const Team = require("./team");
 const ExpressError = require("../error");
-const { dbGetTeamByID } = require("./team");
 
 class Match {
 	constructor(

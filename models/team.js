@@ -2,7 +2,6 @@ const db = require("../db/db");
 const axios = require("axios").default;
 const headers = require("../headers/api-football");
 const season = require("../season");
-const League = require("./league");
 
 class Team {
 	/************************************************

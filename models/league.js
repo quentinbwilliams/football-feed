@@ -2,7 +2,6 @@ const db = require("../db/db");
 const season = require("../season");
 const headers = require("../headers/api-football");
 const axios = require("axios").default;
-const Country = require("./country");
 const ExpressError = require("../error");
 
 class League {
@@ -396,12 +395,11 @@ class League {
 			);
 			const data = query.rows;
 			this.teamsInLeague = data;
-			return data
+			return data;
 		} catch (e) {
 			return new ExpressError(e);
 		}
 	}
-
 }
 
 module.exports = League;

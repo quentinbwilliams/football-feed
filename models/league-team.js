@@ -10,12 +10,25 @@ class LeagueTeam {
 		this.teamID = teamID;
 	}
 
+
+
+	static async dbDeleteLeaguesTeamsView() {
+		try {
+			const deleteView = await db.query(
+				`DROP MATERIALIZED VIEW IF EXISTS leagues_teams CASCADE`
+			);
+			console.log(deleteView);
+		} catch (e) {
+			return new ExpressError(e);
+		}
+	}
+
 	static async dbCreateLeaguesTeamsView() {
 		try {
-			const create = await db.query(
-				`CREATE MATERIALIZED VIEW leagues_teams AS SELECT DISTINCT league_id, home_id FROM matches`
+			const createView = await db.query(
+				`CREATE MATERIALIZED VIEW leagues_teams AS SELECT DISTINCT league_id, home_id AS team_id FROM matches`
 			);
-			return create.rows;
+			console.log(createView)
 		} catch (e) {
 			return new ExpressError(e);
 		}

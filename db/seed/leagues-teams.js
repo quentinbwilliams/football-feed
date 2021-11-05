@@ -8,6 +8,7 @@ const LeagueTeam = require("../../models/league-team");
 
 (async () => {
 	try {
+		const deleteLeagueTeamsView = await LeagueTeam.dbDeleteLeaguesTeamsView();
 		const createLeaguesTeamsView = await LeagueTeam.dbCreateLeaguesTeamsView();
 		return createLeaguesTeamsView;
 	} catch (e) {

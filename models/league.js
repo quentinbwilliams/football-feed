@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const season = require("../season/season");
+const season = require("../season");
 const headers = require("../headers/api-football");
 const axios = require("axios").default;
 const Country = require("./country");

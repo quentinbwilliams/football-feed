@@ -75,6 +75,19 @@ router.get("/:id/squad", async (req, res, next) => {
 		const team = new Team(id);
 		await team.init();
 		await team.apiGetSquadStats();
+		await team.apiGetTeamCoach();
+		res.send(team);
+	} catch (e) {
+		return next(e);
+	}
+});
+
+// GET COACHES
+router.get("/:id/squad/coach", async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const team = new Team(id);
+		await team.init();
 		res.send(team);
 	} catch (e) {
 		return next(e);

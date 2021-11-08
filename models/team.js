@@ -223,6 +223,24 @@ class Team {
 			return new ExpressError(e);
 		}
 	}
+	async apiGetTeamCoach() {
+		try {
+			const options = {
+				headers: headers,
+				params: {
+					team: this.apiFootballID,
+				},
+			};
+			const request = await axios.get(
+				"https://api-football-v1.p.rapidapi.com/v3/coachs",
+				options
+			);
+			const data = request.data.response[0];
+			this.coach = data;
+		} catch (e) {
+			return next(e);
+		}
+	}
 }
 
 module.exports = Team;

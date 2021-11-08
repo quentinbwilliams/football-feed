@@ -42,6 +42,58 @@ router.get("/:id/matches/completed", async (req, res, next) => {
 	}
 });
 
+// GET UPCOMING MATCHES
+router.get("/:id/matches/upcoming", async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const team = new Team(id);
+		await team.init();
+		await team.dbGetUpcomingMatches();
+		res.send(team);
+	} catch (e) {
+		return next(e);
+	}
+});
+
+// GET LIVE MATCHES
+router.get("/:id/matches/live", async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const team = new Team(id);
+		await team.init();
+		await team.apiGetLiveMatches();
+		res.send(team);
+	} catch (e) {
+		return next(e);
+	}
+});
+
+// GET SQUAD STATS
+router.get("/:id/squad", async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const team = new Team(id);
+		await team.init();
+		await team.apiGetSquadStats();
+		res.send(team);
+	} catch (e) {
+		return next(e);
+	}
+});
+
+// GET INJURY LIST
+router.get("/:id/squad/injuries", async (req, res, next) => {
+	try {
+		const { id } = req.params;
+		const team = new Team(id);
+		await team.init();
+		await team.apiGetInjuryList();
+		res.send(team);
+	} catch (e) {
+		return next(e);
+	}
+});
+
 // GET TEAM LEAGUES
 router.get("/:id/leagues", async (req, res, next) => {
 	try {

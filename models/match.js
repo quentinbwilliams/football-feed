@@ -172,7 +172,21 @@ class Match {
 		}
 	}
 
-	async dbUpdateMatchData() {
+	static async dbUpdateMatchData(
+		date,
+		referee,
+		htHome,
+		htAway,
+		ftHome,
+		ftAway,
+		etHome,
+		etAway,
+		penHome,
+		penAway,
+		homeWin,
+		awayWin,
+		id
+	) {
 		try {
 			// UPDATE MATCH DATE, REFEREE, HT_HOME, HT_AWAY, FT_HOME, FT_AWAY, ET_HOME, ET_AWAY, PEN_HOME, PEN_AWAY, HOME_WIN, AWAY_WIN
 			const update = await db.query(
@@ -191,28 +205,68 @@ class Match {
 				away_win = $12
 				WHERE api_football_id = $13`,
 				[
-					this.date,
-					this.referee,
-					this.htHome,
-					this.htAway,
-					this.ftHome,
-					this.ftAway,
-					this.etHome,
-					this.etAway,
-					this.penHome,
-					this.penAway,
-					this.homeWin,
-					this.awayWin,
-					this.api_football_id,
+					date,
+					referee,
+					htHome,
+					htAway,
+					ftHome,
+					ftAway,
+					etHome,
+					etAway,
+					penHome,
+					penAway,
+					homeWin,
+					awayWin,
+					id,
 				]
 			);
-			console.log(
-				`UPDATED ${this.home} ${this.ftHome} vs ${this.away} ${this.ftAway}, in ${this.league}`
-			);
+			console.log(`UPDATED`);
 		} catch (e) {
 			return new ExpressError(e);
 		}
 	}
+
+	// async dbUpdateMatchData() {
+	// 	try {
+	// 		// UPDATE MATCH DATE, REFEREE, HT_HOME, HT_AWAY, FT_HOME, FT_AWAY, ET_HOME, ET_AWAY, PEN_HOME, PEN_AWAY, HOME_WIN, AWAY_WIN
+	// 		const update = await db.query(
+	// 			`UPDATE matches
+	// 			SET date = $1,
+	// 			referee = $2,
+	// 			ht_home = $3,
+	// 			ht_away = $4,
+	// 			ft_home = $5,
+	// 			ft_away = $6,
+	// 			et_home = $7,
+	// 			et_away = $8,
+	// 			pen_home = $9,
+	// 			pen_away = $10,
+	// 			home_win = $11,
+	// 			away_win = $12
+	// 			WHERE api_football_id = $13`,
+	// 			[
+	// 				this.date,
+	// 				this.referee,
+	// 				this.htHome,
+	// 				this.htAway,
+	// 				this.ftHome,
+	// 				this.ftAway,
+	// 				this.etHome,
+	// 				this.etAway,
+	// 				this.penHome,
+	// 				this.penAway,
+	// 				this.homeWin,
+	// 				this.awayWin,
+	// 				this.api_football_id
+	// 			]
+	// 		);
+	// 		console.log(
+	// 			`UPDATED ${this.home} ${this.ftHome} vs ${this.away} ${this.ftAway}, in ${this.league}`
+	// 		);
+	// 	} catch (e) {
+	// 		return new ExpressError(e);
+	// 	}
+	// }
 }
 
 module.exports = Match;

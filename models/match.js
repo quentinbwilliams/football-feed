@@ -212,7 +212,29 @@ class Match {
 		this.awayWin = data.away_win;
 	}
 
-	async dbInsertMatchData() {
+	static async dbInsertMatchData(
+		id,
+		league,
+		leagueID,
+		season,
+		round,
+		date,
+		referee,
+		home,
+		homeID,
+		away,
+		awayID,
+		htHome,
+		htAway,
+		ftHome,
+		ftAway,
+		etHome,
+		etAway,
+		penHome,
+		penAway,
+		homeWin,
+		awayWin
+	) {
 		try {
 			const insert = await db.query(
 				`INSERT INTO matches (

@@ -32,11 +32,10 @@ DATABASE:
 			- Add a static methods to LeagueTeam class to drop and create the materialized leagues_teams view from the matches table.
 			- Remove `SELECT DISTINCT` query methods from League and Team classes.
 			- Add methods to League and Team classes that query the leagues_teams view.
+		- RESULT: A LeagueTeam class with `dbCreateLeaguesTeamsView()`, a static method to create a materialized view from the query: `CREATE MATERIALIZED VIEW leagues_teams AS SELECT DISTINCT league_id, home_id AS team_id FROM matches`.
+			- An async function in db/seed/leagues-teams drops the materialized view and recreates it.
+			- The function is imported to cron and runs at midnight. The schedule can be refactored but right now this works. 
 
-
-TEAMS:
-
-- METHODS & ROUTES
 
 USER MIDDLEWARE:
 
@@ -46,9 +45,9 @@ USER MIDDLEWARE:
 
 ROUTES:
 
-- Use some req param to request data from database.
+- Use id in req param to request data from database.
 - Create object with that data.
-- Call relevant class methods to set object data.
+- Call class methods to set object data.
 - Send object in res.
 - Cache object in router.
 
@@ -56,7 +55,3 @@ CLIENT:
 
 - Components should request router endpoints for data.
 - Request is made with id for each league & team stored in user object (via middleware).
-
-QUESTIONS:
-
-- How will my client and router communicate with each other in deployment?

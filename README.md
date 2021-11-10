@@ -1,7 +1,5 @@
 TODO
 
-DATABASE:
-
 - Automate task to run seed scripts (particularly db/seed/matches).
 - Seed leagues_teams: Without this table, isolating league data on a team object is convoluted.
   - To seed leagues_team:
@@ -34,8 +32,13 @@ DATABASE:
 			- Add methods to League and Team classes that query the leagues_teams view.
 		- RESULT: A LeagueTeam class with `dbCreateLeaguesTeamsView()`, a static method to create a materialized view from the query: `CREATE MATERIALIZED VIEW leagues_teams AS SELECT DISTINCT league_id, home_id AS team_id FROM matches`.
 			- An async function in db/seed/leagues-teams drops the materialized view and recreates it.
-			- The function is imported to cron and runs at midnight. The schedule can be refactored but right now this works. 
+			- The function is imported to cron and runs at midnight. The schedule can be refactored but right now this works.
+- Currently there are over 8,000 matches from this season logged in the database, but no logical relationship has been established in the db to connect matches to leagues and teams.
+	- The League and Team classes should have instance methods to create materialized views for league_matches and team_matches.
 
+2022 World Cup Qualifiers
+- Season is 2022 for api requests, not 2021. How can I change this?
+- WC Qualifier League Model extends League model. Everything stays the same expect the season import is 2022 WC Season, not SEASON from /season.js.
 
 USER MIDDLEWARE:
 

@@ -3,7 +3,6 @@ const updateMatches = require("./matches");
 const updateLeaguesTeams = require("./leagues-teams");
 const ExpressError = require("../../error");
 const LEAGUE_IDS = require("../../leagues-array");
-const currentDate = new Date().toLocaleString();
 
 // UPDATE PREMIER LEAGUE SATURDAY AND SUNDAY AT 6AM, 12PM, 4PM
 const premierLeague = cron.schedule("*	6,12,16	*	*	0,6	", async () => {
@@ -11,6 +10,7 @@ const premierLeague = cron.schedule("*	6,12,16	*	*	0,6	", async () => {
 		const currentDate = new Date().toLocaleString();
 		const update = await updateMatches(39);
 		console.log(`CRON UPDATED PREMIER LEAGUE MATCHES AT ${currentDate}`);
+		console.log(`UPDATE OBJECT: ${update}`);
 	} catch (e) {
 		return new ExpressError(e);
 	}
@@ -22,6 +22,7 @@ const championsLeague = cron.schedule("*	12,15,18	23,24	11	*", async () => {
 		const currentDate = new Date().toLocaleString();
 		const update = await updateMatches(2);
 		console.log(`CRON UPDATED CHAMPIONS LEAGUE MATCHES AT ${currentDate}`);
+		console.log(`UPDATE OBJECT: ${update}`);
 	} catch (e) {
 		return new ExpressError(e);
 	}
@@ -32,62 +33,62 @@ const europaLeague = cron.schedule("*	12,15,18	24,25	11	*", async () => {
 	try {
 		const currentDate = new Date().toLocaleString();
 		const update = await updateMatches(3);
-		console.log(`CRON UPDATED BUNDESLIGA MATCHES AT ${currentDate}`);
+		console.log(`CRON UPDATED EUROPA LEAGUE MATCHES AT ${currentDate}`);
+		console.log(`UPDATE OBJECT: ${update}`);
 	} catch (e) {
 		return new ExpressError(e);
 	}
 });
 
-const leagueCup = cron.schedule("* * 8 * * *", async () => {
-	try {
-		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches(2);
-		console.log(`CRON UPDATED ENGLISH LEAGUE CUP MATCHES AT ${currentDate}`);
-	} catch (e) {
-		return new ExpressError(e);
-	}
-});
+// const leagueCup = cron.schedule("* * 8 * * *", async () => {
+// 	try {
+// 		const currentDate = new Date().toLocaleString();
+// 		const update = await updateMatches(2);
+// 		console.log(`CRON UPDATED ENGLISH LEAGUE CUP MATCHES AT ${currentDate}`);
+// 	} catch (e) {
+// 		return new ExpressError(e);
+// 	}
+// });
 
-const bundesliga = cron.schedule("* * 8 * * *", async () => {
-	try {
-		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches(78);
-		console.log(`CRON UPDATED BUNDESLIGA MATCHES AT ${currentDate}`);
-	} catch (e) {
-		return new ExpressError(e);
-	}
-});
+// const bundesliga = cron.schedule("* * 8 * * *", async () => {
+// 	try {
+// 		const currentDate = new Date().toLocaleString();
+// 		const update = await updateMatches(78);
+// 		console.log(`CRON UPDATED BUNDESLIGA MATCHES AT ${currentDate}`);
+// 	} catch (e) {
+// 		return new ExpressError(e);
+// 	}
+// });
 
-const laLiga = cron.schedule("* * 8 * * *", async () => {
-	try {
-		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches(140);
-		console.log(`CRON UPDATED LA LIGA MATCHES AT ${currentDate}`);
-	} catch (e) {
-		return new ExpressError(e);
-	}
-});
+// const laLiga = cron.schedule("* * 8 * * *", async () => {
+// 	try {
+// 		const currentDate = new Date().toLocaleString();
+// 		const update = await updateMatches(140);
+// 		console.log(`CRON UPDATED LA LIGA MATCHES AT ${currentDate}`);
+// 	} catch (e) {
+// 		return new ExpressError(e);
+// 	}
+// });
 
-const MLS = cron.schedule("* * 8 * * *", async () => {
-	try {
-		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches(253);
-		console.log(`CRON UPDATED MLS MATCHES AT ${currentDate}`);
-	} catch (e) {
-		return new ExpressError(e);
-	}
-});
+// const MLS = cron.schedule("* * 8 * * *", async () => {
+// 	try {
+// 		const currentDate = new Date().toLocaleString();
+// 		const update = await updateMatches(253);
+// 		console.log(`CRON UPDATED MLS MATCHES AT ${currentDate}`);
+// 	} catch (e) {
+// 		return new ExpressError(e);
+// 	}
+// });
 
-
-const ligueUn = cron.schedule("* * 8 * * *", async () => {
-	try {
-		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches(61);
-		console.log(`CRON UPDATED LIGUE UN MATCHES AT ${currentDate}`);
-	} catch (e) {
-		return new ExpressError(e);
-	}
-});
+// const ligueUn = cron.schedule("* * 8 * * *", async () => {
+// 	try {
+// 		const currentDate = new Date().toLocaleString();
+// 		const update = await updateMatches(61);
+// 		console.log(`CRON UPDATED LIGUE UN MATCHES AT ${currentDate}`);
+// 	} catch (e) {
+// 		return new ExpressError(e);
+// 	}
+// });
 
 //! ADD INTERNATIONAL COMPS
 
@@ -105,4 +106,4 @@ const leaguesTeams = cron.schedule("*	0	*	*	*	", async () => {
 premierLeague.start();
 championsLeague.start();
 europaLeague.start();
-leaguesTeams.stop();
+leaguesTeams.start();

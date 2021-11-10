@@ -1,3 +1,5 @@
 const SEASON = 2021;
 
-module.exports = SEASON;
+const WORLD_CUP_QUALIFIERS = 2022;
+
+module.exports = {SEASON, WORLD_CUP_QUALIFIERS};

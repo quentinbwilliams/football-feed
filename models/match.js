@@ -97,6 +97,86 @@ class Match {
 		}
 	}
 
+	static async dbInsertMatchData(
+		apiFootballID,
+		league,
+		leagueID,
+		season,
+		round,
+		date,
+		referee,
+		home,
+		homeID,
+		away,
+		awayID,
+		htHome,
+		htAway,
+		ftHome,
+		ftAway,
+		etHome,
+		etAway,
+		penHome,
+		penAway,
+		homeWin,
+		awayWin
+	) {
+		try {
+			const insert = await db.query(
+				`INSERT INTO matches (
+				api_football_id,
+				league,
+				league_id,
+				season,
+				round,
+				date,
+				referee,
+				home,
+				home_id,
+				away,
+				away_id,
+				ht_home,
+				ht_away,
+				ft_home,
+				ft_away,
+				et_home,
+				et_away,
+				pen_home,
+				pen_away,
+				home_win,
+				away_win)
+				VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)`,
+				[
+					apiFootballID,
+					league,
+					leagueID,
+					season,
+					round,
+					date,
+					referee,
+					home,
+					homeID,
+					away,
+					awayID,
+					htHome,
+					htAway,
+					ftHome,
+					ftAway,
+					etHome,
+					etAway,
+					penHome,
+					penAway,
+					homeWin,
+					awayWin,
+				]
+			);
+			console.log(
+				`CREATED ${this.apiFootballID}, ${this.home} vs ${this.away}, in ${this.league}, on ${this.date}`
+			);
+		} catch (e) {
+			return new ExpressError(e);
+		}
+	}
+
 	static async dbUpdateMatchData(
 		date,
 		referee,
@@ -210,86 +290,6 @@ class Match {
 		this.penAway = data.pen_away;
 		this.homeWin = data.home_win;
 		this.awayWin = data.away_win;
-	}
-
-	static async dbInsertMatchData(
-		id,
-		league,
-		leagueID,
-		season,
-		round,
-		date,
-		referee,
-		home,
-		homeID,
-		away,
-		awayID,
-		htHome,
-		htAway,
-		ftHome,
-		ftAway,
-		etHome,
-		etAway,
-		penHome,
-		penAway,
-		homeWin,
-		awayWin
-	) {
-		try {
-			const insert = await db.query(
-				`INSERT INTO matches (
-				api_football_id,
-				league,
-				league_id,
-				season,
-				round,
-				date,
-				referee,
-				home,
-				home_id,
-				away,
-				away_id,
-				ht_home,
-				ht_away,
-				ft_home,
-				ft_away,
-				et_home,
-				et_away,
-				pen_home,
-				pen_away,
-				home_win,
-				away_win)
-				VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)`,
-				[
-					this.apiFootballID,
-					this.league,
-					this.leagueID,
-					this.season,
-					this.round,
-					this.date,
-					this.referee,
-					this.home,
-					this.homeID,
-					this.away,
-					this.awayID,
-					this.htHome,
-					this.htAway,
-					this.ftHome,
-					this.ftAway,
-					this.etHome,
-					this.etAway,
-					this.penHome,
-					this.penAway,
-					this.homeWin,
-					this.awayWin,
-				]
-			);
-			console.log(
-				`CREATED ${this.apiFootballID}, ${this.home} vs ${this.away}, in ${this.league}, on ${this.date}`
-			);
-		} catch (e) {
-			return new ExpressError(e);
-		}
 	}
 
 	async apiGetLineups() {

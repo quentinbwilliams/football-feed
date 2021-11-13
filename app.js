@@ -17,6 +17,10 @@ app.use("/teams", teamRoutes);
 app.use("/users", userRoutes);
 app.use("/matches", matchRoutes);
 
+app.route("/", (req, res, next) => {
+	console.log('home');
+})
+
 app.use(function (req, res, next) {
 	const e = new ExpressError("Not found!", 404);
 	return next(e);

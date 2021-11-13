@@ -4,3 +4,8 @@ parse.js
 db/.test-data.sql
 config.js
 db/queries.sql
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

@@ -40,6 +40,7 @@ CREATE TABLE leagues
 	type TEXT NOT NULL,
 	logo TEXT,
 	country_code TEXT,
+	season INTEGER,
 	created_at TIMESTAMPTZ DEFAULT Now()
 );
 

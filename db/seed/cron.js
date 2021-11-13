@@ -1,7 +1,5 @@
 const cron = require("node-cron");
 const updateMatches = require("./matches");
-const updateMatches2022Season = require("./matches-2022");
-const updateMatches2020Season = require("./matches-2020");
 const updateLeaguesTeams = require("./leagues-teams");
 const ExpressError = require("../../error");
 
@@ -16,8 +14,6 @@ const premierLeague = cron.schedule("0 12,4 * * 6,0", async () => {
 		return new ExpressError(e);
 	}
 });
-
-
 
 // UPDATE CHAMPIONS LEAGUE NOVEMBER 23,24 AT 12PM, 3PM, 6PM
 const championsLeague = cron.schedule("0 12,15,18 23,24 11 *", async () => {
@@ -47,7 +43,7 @@ const europaLeague = cron.schedule("0 12,15,18 23,24 11 *", async () => {
 const wcQualAfrica = cron.schedule("0 18 16 11 *", async () => {
 	try {
 		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches2022Season(29);
+		const update = await updateMatches(29);
 		console.log(
 			`CRON UPDATED AFRICAN WORLD CUP QUALIFICATION MATCHES AT ${currentDate}`
 		);
@@ -61,7 +57,7 @@ const wcQualAfrica = cron.schedule("0 18 16 11 *", async () => {
 const wcQualAsia = cron.schedule("0 15 16 11 *", async () => {
 	try {
 		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches2022Season(30);
+		const update = await updateMatches(30);
 		console.log(
 			`CRON UPDATED ASIAN WORLD CUP QUALIFICATION MATCHES AT ${currentDate}`
 		);
@@ -76,7 +72,7 @@ const wcQualAsia = cron.schedule("0 15 16 11 *", async () => {
 const wcQualCONCACAF = cron.schedule("0 22 12 11 *", async () => {
 	try {
 		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches2022Season(31);
+		const update = await updateMatches(31);
 		console.log(
 			`CRON UPDATED CONCACAF WORLD CUP QUALIFICATION MATCHES AT ${currentDate}`
 		);
@@ -90,7 +86,7 @@ const wcQualCONCACAF = cron.schedule("0 22 12 11 *", async () => {
 const wcQualEurope = cron.schedule("0 14 12 11 *", async () => {
 	try {
 		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches2020Season(32);
+		const update = await updateMatches(32);
 		console.log(
 			`CRON UPDATED EUROPEAN WORLD CUP QUALIFICATION MATCHES AT ${currentDate}`
 		);
@@ -104,7 +100,7 @@ const wcQualEurope = cron.schedule("0 14 12 11 *", async () => {
 const wcQualSouthAmerica = cron.schedule("0 21 12 11 *", async () => {
 	try {
 		const currentDate = new Date().toLocaleString();
-		const update = await updateMatches2022Season(34);
+		const update = await updateMatches(34);
 		console.log(
 			`CRON UPDATED SOUTH AMERICAN WORLD CUP QUALIFICATION MATCHES AT ${currentDate}`
 		);

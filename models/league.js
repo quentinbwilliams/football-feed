@@ -43,6 +43,7 @@ class League {
 			this.type = data.type;
 			this.logo = data.logo;
 			this.countryCode = data.country_code;
+			this.season = data.season;
 		} catch (e) {
 			return new ExpressError(e);
 		}
@@ -51,7 +52,7 @@ class League {
 	static async dbGetLeague(apiFootballID) {
 		try {
 			const query = await db.query(
-				`SELECT api_football_id, name, country_name, type, logo, country_code
+				`SELECT api_football_id, name, country_name, type, logo, country_code, season
 				FROM leagues
 				WHERE api_football_id = $1`,
 				[apiFootballID]
@@ -98,7 +99,7 @@ class League {
 		try {
 			const options = {
 				params: {
-					season: `${season}`,
+					season: `${this.season}`,
 					league: `${this.apiFootballID}`,
 				},
 				headers: headers,
@@ -177,7 +178,7 @@ class League {
 				headers: headers,
 				params: {
 					league: this.apiFootballID,
-					season: season,
+					season: this.season,
 				},
 			};
 			const request = await axios.get(
@@ -235,7 +236,7 @@ class League {
 				headers: headers,
 				params: {
 					league: this.apiFootballID,
-					season: season,
+					season: this.season,
 					current: true,
 				},
 			};
@@ -295,7 +296,7 @@ class League {
 				headers: headers,
 				params: {
 					league: this.apiFootballID,
-					season: season,
+					season: this.season,
 				},
 			};
 			const request = await axios.get(
@@ -316,7 +317,7 @@ class League {
 				headers: headers,
 				params: {
 					league: this.apiFootballID,
-					season: season,
+					season: this.season,
 				},
 			};
 			const request = await axios.get(
@@ -337,7 +338,7 @@ class League {
 				headers: headers,
 				params: {
 					league: this.apiFootballID,
-					season: season,
+					season: this.season,
 				},
 			};
 			const request = await axios.get(
@@ -358,7 +359,7 @@ class League {
 				headers: headers,
 				params: {
 					league: this.apiFootballID,
-					season: season,
+					season: this.season,
 				},
 			};
 			const request = await axios.get(
@@ -378,7 +379,7 @@ class League {
 			const options = {
 				headers: headers,
 				params: {
-					season: season,
+					season: this.season,
 					league: this.apiFootballID,
 				},
 			};

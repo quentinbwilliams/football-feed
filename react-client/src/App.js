@@ -1,10 +1,11 @@
 import React from "react";
-import LeagueViewer from "./LeagueTitle";
+import LeagueViewer from "./components/LeagueTitleCard";
+import LeagueStandings from "./components/LeagueStandings"
 
 const App = () => (
 	<div className="App">
 		<div>
-			<LeagueViewer />
+			<LeagueStandings />
 		</div>
 	</div>
 );

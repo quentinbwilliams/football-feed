@@ -9,6 +9,9 @@ const leagueRoutes = require("./routes/leagues");
 const teamRoutes = require("./routes/teams");
 const userRoutes = require("./routes/user");
 const matchRoutes = require("./routes/matches");
+const cors = require('cors');
+
+app.use(cors());
 
 app.use(express.json());
 app.use("/countries", countryRoutes);

@@ -3,7 +3,7 @@ headers
 parse.js
 db/.test-data.sql
 config.js
-db/queries.sql
+db/seed/queries.sql
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

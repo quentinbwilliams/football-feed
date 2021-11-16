@@ -1,7 +1,6 @@
 const db = require("../db/db");
 const axios = require("axios").default;
 const headers = require("../headers/api-football");
-const season = require("../season");
 const ExpressError = require("../error");
 
 class Team {

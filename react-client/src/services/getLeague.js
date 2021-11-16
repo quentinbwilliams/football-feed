@@ -1,6 +1,13 @@
 const axios = require("axios");
+const ExpressError = require("./error");
 
-export async function getLeague() {
-	const request = await axios.get(`/leagues`);
-	return request.data;
+async function getLeague(id) {
+	try {
+		const request = await axios.get(`/leagues/${id}`);
+		return request.data;
+	} catch (e) {
+		return new ExpressError(e);
+	}
 }
+
+module.exports = getLeague;

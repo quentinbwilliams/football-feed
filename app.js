@@ -17,8 +17,8 @@ app.use("/teams", teamRoutes);
 app.use("/users", userRoutes);
 app.use("/matches", matchRoutes);
 
-app.route("/", (req, res, next) => {
-	console.log('home');
+app.get("/", (req, res, next) => {
+	res.send('Welcome to Matchday App');
 })
 
 app.use(function (req, res, next) {
@@ -26,9 +26,9 @@ app.use(function (req, res, next) {
 	return next(e);
 });
 
-// Listen on port 3000
+// Listen on port 5000
 app.listen(5000, function () {
-	console.log("Server started on 5000");
+	console.log("Server started on port 5000");
 });
 
 module.exports = app;

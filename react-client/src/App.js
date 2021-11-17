@@ -1,13 +1,12 @@
 import React from "react";
-import LeagueViewer from "./components/LeagueTitleCard";
-import LeagueStandings from "./components/LeagueStandings"
+import LeagueStandings from "./components/LeagueStandings";
 
 const App = () => (
 	<div className="App">
+
 		<div>
-			<LeagueStandings />
+			<LeagueStandings leagueID={39} />
 		</div>
 	</div>
 );
-
 export default App;

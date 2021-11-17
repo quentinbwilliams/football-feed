@@ -18,7 +18,7 @@ function LeagueStandings(props) {
 			setLeague(leagueData.data);
 			setStandings(leagueData.data.standings);
 			if (leagueData.data.type === "Cup") {
-				setTableHeaders(Object.keys(leagueData.data.standings[0][0]));
+				setTableHeaders(Object.keys(leagueData.data.standings.flat()[0]));
 				setTeams(leagueData.data.standings.flat().map((team) => team));
 			} else if (leagueData.data.type === "League") {
 				setTableHeaders(Object.keys(leagueData.data.standings[0]));
@@ -44,9 +44,13 @@ function LeagueStandings(props) {
 			<Table hover>
 				<thead>
 					<tr>
-						{tableHeaders.map((header) => {
-							return <th>{header}</th>;
-						})}
+						<th>Rank</th>
+						<th>Team</th>
+						<th>Points</th>
+						<th>Goal Differnce</th>
+						<th>Group</th>
+						<th>Form</th>
+						<th>Description</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -65,6 +69,7 @@ function LeagueStandings(props) {
 								</td>
 								<td>{team.points}</td>
 								<td>{team.goalsDiff}</td>
+								<td>{team.group}</td>
 								<td>{team.form}</td>
 								<td>{team.description}</td>
 							</tr>

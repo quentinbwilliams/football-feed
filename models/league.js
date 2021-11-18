@@ -98,10 +98,10 @@ class League {
 		try {
 			const options = {
 				params: {
-					season: `${this.season}`,
+					season: `${this.seaon}`,
 					league: `${this.apiFootballID}`,
 				},
-				headers: headers,
+				headers: headers
 			};
 			const request = await axios.get(
 				"https://api-football-v1.p.rapidapi.com/v3/standings",

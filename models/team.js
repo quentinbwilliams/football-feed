@@ -2,6 +2,7 @@ const db = require("../db/db");
 const axios = require("axios").default;
 const headers = require("../headers/api-football");
 const ExpressError = require("../error");
+const season = 2021;
 
 class Team {
 	/************************************************

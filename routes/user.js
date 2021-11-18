@@ -28,7 +28,7 @@ router.get("/:id", async (req, res, next) => {
 		const user = new User(getUser.username, getUser.email, getUser.id);
 		const leagues = await user.dbGetUserLeagues();
 		const teams = await user.dbGetUserTeams();
-		return res.send([user, teams]);
+		return res.send(user);
 	} catch (err) {
 		return next(err);
 	}

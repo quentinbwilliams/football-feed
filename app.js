@@ -9,7 +9,7 @@ const leagueRoutes = require("./routes/leagues");
 const teamRoutes = require("./routes/teams");
 const userRoutes = require("./routes/user");
 const matchRoutes = require("./routes/matches");
-const cors = require('cors');
+const cors = require("cors");
 
 app.use(cors());
 
@@ -21,8 +21,8 @@ app.use("/users", userRoutes);
 app.use("/matches", matchRoutes);
 
 app.get("/", (req, res, next) => {
-	res.send('Welcome to Matchday App');
-})
+	res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.use(function (req, res, next) {
 	const e = new ExpressError("Not found!", 404);

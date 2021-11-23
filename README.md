@@ -1,3 +1,5 @@
+The matchday api is deployed using a digitalocean private cloud network & an nginx web server -- found at matchday.cloud
+
 TODO
 
 - Automate task to run seed scripts (particularly db/seed/matches).

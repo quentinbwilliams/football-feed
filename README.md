@@ -1,4 +1,4 @@
-TODO
+The matchday api is deployed using a digitalocean private cloud network & an nginx web server -- found at matchday.cloud
 
 - Automate task to run seed scripts (particularly db/seed/matches).
 - Seed leagues_teams: Without this table, isolating league data on a team object is convoluted.

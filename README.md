@@ -1,4 +1,33 @@
-The matchday api is deployed using a digitalocean private cloud network & an nginx web server -- found at matchday.cloud
+The API is deployed using a digitalocean private cloud network & an nginx web server -- found at matchday.cloud
+The matchday api is deployed using a digitalocean private cloud network & an nginx web server -- found at matchday.cloud.
+
+Serving:
+League data:
+leagues/:id
+leagues/:id/standings
+leagues/:id/matches
+leagues/:id/matches/current
+leagues/:id/matches/live
+leagues/:id/goals
+leagues/:id/assists
+leagues/:id/yellowcards
+leagues/:id/redcards
+Team data:
+teams/:id/matches
+teams/:id/matches/completed
+teams/:id/matches/upcoming
+teams/:id/matches/live
+teams/:id/squad
+teams/:id/squad/coach
+teams/:id/squad/injuries
+teams/:id/leagues
+Country data:
+countries/:code
+countries/:code/leagues
+countries/:code/teams
+countries/:code/national
+Match data:
+matches/:id
 
 TODO
 

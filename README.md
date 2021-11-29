@@ -4,15 +4,15 @@ The matchday api is deployed using a digitalocean private cloud network & an ngi
 SERVING:
 
 League data:
-	leagues/:id
-	leagues/:id/standings
-	leagues/:id/matches
-	leagues/:id/matches/current
-	leagues/:id/matches/live
-	leagues/:id/goals
-	leagues/:id/assists
-	leagues/:id/yellowcards
-	leagues/:id/redcards
+	`leagues/:id`
+	`leagues/:id/standings`
+	`leagues/:id/matches`
+	`leagues/:id/matches/current`
+	`leagues/:id/matches/live`
+	`leagues/:id/goals`
+	`leagues/:id/assists`
+	`leagues/:id/yellowcards`
+	`leagues/:id/redcards`
 
 Team data:
 	`teams/:id/matches`

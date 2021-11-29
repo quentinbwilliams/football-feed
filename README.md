@@ -16,22 +16,22 @@ League data:
 
 Team data:
 	`teams/:id/matches`
-	teams/:id/matches/completed
-	teams/:id/matches/upcoming
-	teams/:id/matches/live
-	teams/:id/squad
-	teams/:id/squad/coach
-	teams/:id/squad/injuries
-	teams/:id/leagues
+	`teams/:id/matches/completed`
+	`teams/:id/matches/upcoming`
+	`teams/:id/matches/live`
+	`teams/:id/squad`
+	`teams/:id/squad/coach`
+	`teams/:id/squad/injuries`
+	`teams/:id/leagues`
 
 Country data:
-	countries/:code
-	countries/:code/leagues
-	countries/:code/teams
-	countries/:code/national
+	`countries/:code`
+	`countries/:code/leagues`
+	`countries/:code/teams`
+	`countries/:code/national`
 
 Match data:
-	matches/:id
+	`matches/:id`
 
 TODO
 

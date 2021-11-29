@@ -15,7 +15,7 @@ League data:
 	leagues/:id/redcards
 
 Team data:
-	teams/:id/matches
+	`teams/:id/matches`
 	teams/:id/matches/completed
 	teams/:id/matches/upcoming
 	teams/:id/matches/live
